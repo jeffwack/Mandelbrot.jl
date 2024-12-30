@@ -1,5 +1,3 @@
-
-
 struct RationalAngle <: Number
     value::Rational
     function RationalAngle(theta::Rational)
@@ -246,6 +244,7 @@ function firstaddress(intadd::Vector{Int})
     return AngledInternalAddress(intadd,angles)
 end
 
+"""returns the internal address obtained by appending two times the last number of the internal address provided"""
 function bifurcate(aia::AngledInternalAddress)
     intadd = copy(aia.addr)
     intadd = append!(intadd,intadd[end]*2//1)
@@ -286,6 +285,7 @@ function orbit(seq::Sequence)
 end
 
 #TreesBook pg 145
+"""returns the denominators of the angles of any angled internal address with the given integer values"""
 function denominators(S::InternalAddress)
     n = length(S) - 1
     #the last entry has no angle #page 143

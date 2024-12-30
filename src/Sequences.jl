@@ -1,3 +1,7 @@
+#=
+This file defines 'sequences' which represent infinite, eventually periodic indexed collections of items.
+=#
+
 struct Sequence{T}
     items::Vector{T}
     preperiod::Int
@@ -9,7 +13,7 @@ struct Sequence{T}
         k = length(repetend)
     
         if length(repetend) > 1
-            for d in divisors(k)
+            for d in divisors(k) #divisors() is defined in Primes.jl
                 chunks = collect.(partition(repetend,d))
                 if allequal(chunks)
                     repetend = chunks[1]
@@ -50,6 +54,8 @@ function ==(x::Sequence,y::Sequence)
     return x.items==y.items && x.preperiod==y.preperiod
 end
 
+#allows for accessing elements of a sequence with array syntax. 
+#Should negative indexing be allowed for strictly periodic sequences?
 function Base.getindex(S::Sequence, ii::Int)
     if ii <= S.preperiod
         return S.items[ii]
@@ -63,11 +69,15 @@ function Base.getindex(S::Sequence, I::UnitRange)
     return [S[ii] for ii in I]
 end
 
+#Hashing is required to use sequences as dictionary keys
 function Base.hash(S::Sequence,h::UInt)
     k = hash(S.preperiod,foldr(hash,S.items; init = UInt(0)))
     return hash(h,hash(:Sequence,k))
 end
 
+#The vertical bars play the role of the overbar indicating the periodic part of a decimal expansion
+#Printing an overbar is possible but looked ugly, so I opted for these vertical bars instead.
+#They evoke musical repeat symbols.
 function Base.show(io::IO, K::Sequence)
     str = join([string(item) for item in K.items])
     L = K.preperiod
@@ -100,6 +110,7 @@ function shiftby(seq::Sequence,n::Int)
     end
 end
 
+#This is the 'inverse' of shift, you must supply the new item which will be prepended to the sequence
 function prepend(K::Sequence{T},thing) where T
     return Sequence{T}(pushfirst!(copy(K.items),thing),K.preperiod+1)
 end

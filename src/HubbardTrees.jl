@@ -12,6 +12,9 @@ struct HubbardTree <: AbstractHubbardTree
     criticalpoint::KneadingSequence
 end
 
+"""Creates a topological Hubbard tree from the given kneading sequence. See https://eudml.org/doc/283172
+Existence of quadratic Hubbard trees Henk Bruin, Alexandra Kafll, Dierk Schleicher 
+for info about the algorithm implemented here"""
 function HubbardTree(K::KneadingSequence)
     starK = prepend(K,KneadingSymbol('*'))
     #We begin with the critical orbit
@@ -36,6 +39,8 @@ function HubbardTree(intadd::InternalAddress)
     return HubbardTree(Sequence{KneadingSymbol}(seq,0))
 end
 
+"""uses the triod map repeatedly to insert a new sequence into a Hubbard tree in the correct position
+Question: """
 function addsequence(Htree,Kseq,(A,Bset),newpoint)
     if newpoint in collect(keys(Htree))
         print("warning: point already in tree")
