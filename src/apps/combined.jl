@@ -1,5 +1,6 @@
 using GLMakie
-include("parameters/JuliaSet.jl")
+include("../juliaset.jl")
+include("../renderfractal.jl")
 include("interactive.jl")
 
 fig = Figure()

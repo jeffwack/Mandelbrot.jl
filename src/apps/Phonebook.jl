@@ -1,5 +1,5 @@
 using GLMakie
-include("AngleDoubling.jl")
+include("../angledoubling.jl")
 
 #for each internal address, calculate a screen which shows the future options
 

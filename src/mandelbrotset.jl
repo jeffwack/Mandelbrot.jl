@@ -21,7 +21,7 @@ function mandelbrotpatch(A::Complex, B::Complex, scale::Real,size::Int)
 end
 
 function showmandelbrot((A, B), scale::Real)
-    M = mandelbrot_patch(A,B,scale)
+    M = mandelbrotpatch(A,B,scale)
     PA = mproblem_array(M,escape(100),100)
     pic = [x[1] for x in escapetime.(PA)]
     return heatmap(pic,nan_color = RGBAf(0,0,0,1),colormap = :PRGn_9)

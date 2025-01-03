@@ -28,7 +28,7 @@ function Base.show(io::IO, theta::RationalAngle)
     return print(io,theta.value)
 end
 
-function orbit(angle::RationalAngle)
+function orbit(angle)
     items = RationalAngle[]
 
     while isempty(findall(x->x==angle,items))
