@@ -24,6 +24,8 @@ include("angledoubling.jl")
 include("Graphs.jl")
 include("HubbardTrees.jl")
 
+include("colorpicker.jl")
+
 include("orienttrees.jl")
 include("dynamicrays.jl")
 include("embedtrees.jl")

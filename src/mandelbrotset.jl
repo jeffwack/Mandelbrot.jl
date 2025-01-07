@@ -20,13 +20,6 @@ function mandelbrotpatch(A::Complex, B::Complex, scale::Real,size::Int)
     return origin_patch .+ center
 end
 
-function showmandelbrot((A, B), scale::Real)
-    M = mandelbrotpatch(A,B,scale)
-    PA = mproblem_array(M,escape(100),100)
-    pic = [x[1] for x in escapetime.(PA)]
-    return heatmap(pic,nan_color = RGBAf(0,0,0,1),colormap = :PRGn_9)
-end
-
 function brotplot(c1,c2)
 
     scale = 10
@@ -35,9 +28,13 @@ function brotplot(c1,c2)
     PA = mproblem_array(M,escape(100),500)
 
     fig = Figure()
-    ax = Axis(fig[1,1])
-    heatmap!(ax,mod.([x[1] for x in escapetime.(PA)],50),nan_color = RGBAf(0,0,0,1),colormap = :Set3_12)
-    on(events(ax).scroll, priority = 1) do event
+    ax1 = Axis(fig[1,1])
+    ax2 = Axis(fig[1,2])
+
+    colors = colorax(fig,ax2,8)
+
+    heatmap!(ax1,mod.([x[1] for x in escapetime.(PA)],50),nan_color = RGBAf(0,0,0,1),colormap = colors)
+    on(events(ax1).scroll, priority = 1) do event
 
         # Determine zoom factor (adjust the value for different zoom speed)
         zoom_factor = first(filter(x->x!=0,event))
@@ -49,8 +46,8 @@ function brotplot(c1,c2)
         println(scale)
         M = mandelbrotpatch(c1,c2,scale,500)
         PA = mproblem_array(M,escape(100),500)
-        empty!(ax)
-        heatmap!(ax,mod.([x[1] for x in escapetime.(PA)],50),nan_color = RGBAf(0,0,0,1),colormap = :Set3_12)
+        empty!(ax1)
+        heatmap!(ax1,mod.([x[1] for x in escapetime.(PA)],50),nan_color = RGBAf(0,0,0,1),colormap = colors)
     end
 
     return fig
@@ -77,38 +74,3 @@ function movie(list)
     end
 end
 
-function overlay(maxiter::Int)
-    M = mandelbrotpatch(0+0im,-2+0im,0.2)
-
-    MA = mproblem_array(M,escape(100),maxiter)
-    LA = lproblem_array(M,escape(10000),maxiter)
-
-    EMA = escapetime.(MA)
-    ELA = escapetime.(LA)
-
-    CEMA = zeros(size(EMA))
-
-    for ii in eachindex(EMA)
-        if isnan(EMA[ii][1])
-            CEMA[ii] = 1
-        end
-    end
-
-    CELA = zeros(size(ELA))
-
-    for ii in eachindex(ELA)
-        if isnan(ELA[ii][1])
-            CELA[ii] = 1
-        end
-    end
-
-    fig = Figure()
-    scene = Scene(camera=campixel!, resolution=(1000,1000))
-    ax = Axis(scene,aspect = 1)
-
-    #heatmap!(scene,CEMA, colormap = [RGBAf(c.r,c.g,c.b,0.5) for c in to_colormap(:reds)] )
-    heatmap!(scene,CELA,colormap = [RGBAf(c.r,c.g,c.b,0.5) for c in to_colormap(:blues)])
-
-    return scene
-
-end
