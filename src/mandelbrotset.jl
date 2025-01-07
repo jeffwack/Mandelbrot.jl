@@ -27,16 +27,33 @@ function showmandelbrot((A, B), scale::Real)
     return heatmap(pic,nan_color = RGBAf(0,0,0,1),colormap = :PRGn_9)
 end
 
-function brotplot(angle1,angle2)
-    @time c1 = parameter(RationalAngle(angle1),500)
-    println(c1)
-    @time c2 = parameter(RationalAngle(angle2),500)
-    println(c2)
+function brotplot(c1,c2)
 
-    M = mandelbrotpatch(c1,c2,10,500)
+    scale = 10
+
+    M = mandelbrotpatch(c1,c2,scale,500)
     PA = mproblem_array(M,escape(100),500)
 
-    return heatmap(mod.([x[1] for x in escapetime.(PA)],50),nan_color = RGBAf(0,0,0,1),colormap = :Set3_12)
+    fig = Figure()
+    ax = Axis(fig[1,1])
+    heatmap!(ax,mod.([x[1] for x in escapetime.(PA)],50),nan_color = RGBAf(0,0,0,1),colormap = :Set3_12)
+    on(events(ax).scroll, priority = 1) do event
+
+        # Determine zoom factor (adjust the value for different zoom speed)
+        zoom_factor = first(filter(x->x!=0,event))
+
+        zoom_factor = zoom_factor > 0 ? sqrt(1/(zoom_factor+1)) : sqrt(-zoom_factor+1)
+    
+        # Adjusted xrange and yrange
+        scale = scale*zoom_factor
+        println(scale)
+        M = mandelbrotpatch(c1,c2,scale,500)
+        PA = mproblem_array(M,escape(100),500)
+        empty!(ax)
+        heatmap!(ax,mod.([x[1] for x in escapetime.(PA)],50),nan_color = RGBAf(0,0,0,1),colormap = :Set3_12)
+    end
+
+    return fig
 end
 
 
@@ -45,7 +62,13 @@ function brotplot(aia::AngledInternalAddress)
     println(RationalAngle(theta1))
     @time theta2 = first(criticalanglesof(bifurcate(aia)))
     println(RationalAngle(theta2))
-    return brotplot(theta1,theta2)
+
+    @time c1 = parameter(RationalAngle(theta1),500)
+    println(c1)
+    @time c2 = parameter(RationalAngle(theta2),500)
+    println(c2)
+
+    return brotplot(c1,c2)
 end
 
 function movie(list)

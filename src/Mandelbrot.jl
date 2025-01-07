@@ -10,7 +10,6 @@ export RationalAngle,
        parameter,
        treeplot,
        spiderplot,
-       showm,
        brotplot
 
 using ColorSchemes,
