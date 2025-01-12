@@ -20,7 +20,7 @@ function juliamovie(frames::Int)
 end
 
 function juliaframe!(scene,param,colors)
-    J = julia_patch(0.0+0.0im,2.0+0.0im)
+    J = patch(0.0+0.0im,2.0+0.0im,1000)
     f(z) = z*z + param
     PA = jproblem_array(J,f,escapeorconverge(100),100)
     pic = [x[1] for x in escapetime.(PA)]
@@ -39,7 +39,7 @@ function binaryframe!(scene,param)
     #We will consider a point arrived at zero if its modulus is less than epsilon, and arrived at infinity if its modulus is greater than 1/epsilon
 
     #first, set up a grid of test points.
-    J = julia_patch(0.0+0.0im,2.0+0.0im)
+    J = patch(0.0+0.0im,2.0+0.0im)
 
     maxiter = 100
     f(z) = z*z + param

@@ -232,7 +232,7 @@ function Base.show(io::IO, AIA::AngledInternalAddress)
     for ii in eachindex(AIA.addr)
         address *= repr(AIA.addr[ii])
         if ii < lastindex(AIA.addr)#this will return true if num is not the last element because addr has no repeats
-            address *= "———"
+            address *= " ——"
             address *= repr(AIA.angles[ii])
             address *= "——> "
         end
