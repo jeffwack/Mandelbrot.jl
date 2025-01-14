@@ -39,9 +39,9 @@ C = coefs(pilot)
 
 rightcenterdelta = 0.00001+0.000001im
 
-patch = julia_patch(0.0+0.0im,rightcenterdelta)
+P = patch(0.0+0.0im,rightcenterdelta,500)
 
-PA = [(pilot,C,delta) for delta in patch]
+PA = [(pilot,C,delta) for delta in P]
 
 results = [perturb(stuff...) for stuff in PA]
 

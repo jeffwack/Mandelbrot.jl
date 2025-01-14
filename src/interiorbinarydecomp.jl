@@ -41,7 +41,7 @@ function alphamovie(frames::Int)
     #We will consider a point arrived at zero if its modulus is less than epsilon, and arrived at infinity if its modulus is greater than 1/epsilon
 
     #first, set up a grid of test points.
-    J = julia_patch(0.0+0.0im,2.0+0.0im)
+    J = patch(0.0+0.0im,2.0+0.0im,500)
 
     c = -0.3+0.0im
 

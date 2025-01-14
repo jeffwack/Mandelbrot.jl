@@ -1,3 +1,21 @@
+function patch(center, right_center_displacement,N::Int) 
+    #Overall strategy: 
+    #First we will calculate a matrix of displacements from the center number.
+    #This will be useful for the perturbation theory approach later, and the matrix we want for now 
+    #can be obtained by simply adding the center parameter to the whole matrix.
+
+    top_center_displacement = -1.0*im*right_center_displacement
+    #points from the origin to the top of the frame
+
+    horizontal_axis = LinRange(-right_center_displacement,right_center_displacement,N)
+    vertical_axis = LinRange(-top_center_displacement,top_center_displacement,N)
+
+    origin_patch = transpose(vertical_axis) .+ horizontal_axis
+
+    return origin_patch .+ center
+end
+
+
 struct EscapeTimeProblem
     z0::Number
     f::Function
@@ -101,23 +119,6 @@ function escapeorconverge(Radius::Real)
     return escaped
 end
 
-
-function patch(center::Complex, right_center_displacement::Complex,N::Int) 
-    #Overall strategy: 
-    #First we will calculate a matrix of displacements from the center number.
-    #This will be useful for the perturbation theory approach later, and the matrix we want for now 
-    #can be obtained by simply adding the center parameter to the whole matrix.
-
-    top_center_displacement = -1.0*im*right_center_displacement
-    #points from the origin to the top of the frame
-
-    horizontal_axis = LinRange(-right_center_displacement,right_center_displacement,N)
-    vertical_axis = LinRange(-top_center_displacement,top_center_displacement,N)
-
-    origin_patch = transpose(vertical_axis) .+ horizontal_axis
-
-    return origin_patch .+ center
-end
 
 function inverseiterate(c::Complex,steps::Int)
     preimages = ComplexF64[3.0+0.0im]

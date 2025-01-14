@@ -1,5 +1,5 @@
 function overlay(maxiter::Int)
-    M = mandelbrotpatch(0+0im,-2+0im,0.2)
+    M = patch(0+0im,-2+0im,5000)
 
     MA = mproblem_array(M,escape(100),maxiter)
     LA = lproblem_array(M,escape(10000),maxiter)

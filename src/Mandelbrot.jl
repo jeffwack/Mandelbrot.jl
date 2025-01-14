@@ -39,7 +39,7 @@ include("spiderfuncs.jl")
 include("spidermap.jl")
 
 include("renderfractal.jl")
-include("perturb.jl")
+#include("perturb.jl")
 
 include("showrays.jl")
 include("showspider.jl")

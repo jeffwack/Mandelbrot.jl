@@ -1,31 +1,12 @@
-function mandelbrotpatch(A::Complex, B::Complex, scale::Real,size::Int)
-    #we will first compute the patch at the correct scale and orientation, centered at the origin
-    #we will then translate the patch to to correct location and return it
-
-    center = 0.5*(A + B)  
-    #The center of the patch
-
-    to_side = scale*(A - B) 
-    #The complex number which points from the origin to the right side of the origin-centered patch
-
-    to_top = 1.0im*to_side
-    #points from the origin to the top of the frame
-
-    horizontal_axis = LinRange(-to_side,to_side,size)
-    vertical_axis = LinRange(-to_top,to_top,size)
-
-    origin_patch = transpose(vertical_axis) .+ horizontal_axis
-    #we want a matrix whose i,jth element is H[i] + V[j]
-
-    return origin_patch .+ center
+function mframe()
 end
 
 function brotplot(c1,c2)
 
     scale = 10
-
-    M = mandelbrotpatch(c1,c2,scale,500)
-    PA = mproblem_array(M,escape(100),500)
+    center = (c1+c2)/2
+    diff = abs(c1-c2)
+    N = 500
 
     fig = Figure()
     ax1 = Axis(fig[1,1])
@@ -33,7 +14,6 @@ function brotplot(c1,c2)
 
     colors = colorax(fig,ax2,8)
 
-    heatmap!(ax1,mod.([x[1] for x in escapetime.(PA)],50),nan_color = RGBAf(0,0,0,1),colormap = colors)
     on(events(ax1).scroll, priority = 1) do event
 
         # Determine zoom factor (adjust the value for different zoom speed)
@@ -44,10 +24,25 @@ function brotplot(c1,c2)
         # Adjusted xrange and yrange
         scale = scale*zoom_factor
         println(scale)
-        M = mandelbrotpatch(c1,c2,scale,500)
+
+        right_center_displacement = scale*diff
+
+        top_center_displacement = right_center_displacement
+        #points from the origin to the top of the frame
+    
+        horizontal_axis = LinRange(-right_center_displacement,right_center_displacement,N)
+        vertical_axis = LinRange(-top_center_displacement,top_center_displacement,N)
+    
+        origin_patch = transpose(-1.0im*vertical_axis) .+ horizontal_axis
+
+        M = origin_patch .+ center
+
         PA = mproblem_array(M,escape(100),500)
-        empty!(ax1)
-        heatmap!(ax1,mod.([x[1] for x in escapetime.(PA)],50),nan_color = RGBAf(0,0,0,1),colormap = colors)
+       
+        pic = mod.([x[1] for x in escapetime.(PA)],50)
+        ax1.limits = (horizontal_axis[1].+real(center), horizontal_axis[end].+real(center),vertical_axis[1].+imag(center),vertical_axis[end].+imag(center))
+        heatmap!(ax1,horizontal_axis.+real(center),vertical_axis.+imag(center),pic,nan_color = RGBAf(0,0,0,1),colormap = colors)
+
     end
 
     return fig
