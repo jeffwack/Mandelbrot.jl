@@ -13,8 +13,8 @@ function patch(center, right_center_displacement,N::Int)
     origin_patch = transpose(vertical_axis) .+ horizontal_axis
 
     return origin_patch .+ center
-end
-
+end 
+ 
 
 struct EscapeTimeProblem
     z0::Number
