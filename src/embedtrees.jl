@@ -69,7 +69,7 @@ function HyperbolicComponent(theta::Rational)
 end
 
 function Base.show(io::IO,H::HyperbolicComponent)
-    return println(io,"Embedded Hubbard tree of "*repr(H.angle)*" with "*repr(length(keys(H.adj)))*" vertices")
+    return println(io,"Embedded Hubbard tree of "*repr(H.angle)*" with "*repr(length(keys(H.htree.adj)))*" vertices")
 end
 
 function standardedges(adj,zero,zvalues)

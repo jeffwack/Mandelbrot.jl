@@ -69,7 +69,7 @@ function Base.hash(S::Sequence,h::UInt)
 end
 
 function Base.show(io::IO, K::Sequence)
-    str = join([string(item) for item in K.items])
+    str = join([repr(item) for item in K.items])
     L = K.preperiod
     if L == 0
         return print(io,"|"*str*"|")

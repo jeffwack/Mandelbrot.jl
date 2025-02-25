@@ -12,7 +12,7 @@ struct RationalAngle <: Number
     end
 end
 
-import Base: +, *, /, <, >, numerator, denominator, convert
+import Base: +, *, /, <, >, numerator, denominator, convert, isless
 
 phi::RationalAngle + theta::RationalAngle = RationalAngle(mod(phi.value+theta.value,1))
 theta::RationalAngle * s::Number = RationalAngle(mod(theta.value*s,1))
@@ -20,6 +20,7 @@ s::Number * theta::RationalAngle = theta * s
 theta::RationalAngle / s::Number = RationalAngle(theta.value/s)
 phi::RationalAngle > theta::RationalAngle = phi.value > theta.value
 phi::RationalAngle < theta::RationalAngle = phi.value < theta.value
+isless(phi::RationalAngle, theta::RationalAngle) = isless(phi.value,theta.value)
 
 denominator(theta::RationalAngle) = denominator(theta.value)
 numerator(theta::RationalAngle) = numerator(theta.value)
