@@ -39,8 +39,8 @@ function HubbardTree(intadd::InternalAddress)
     return HubbardTree(Sequence{KneadingSymbol}(seq,0))
 end
 
-"""uses the triod map repeatedly to insert a new sequence into a Hubbard tree in the correct position
-Question: """
+#"""uses the triod map repeatedly to insert a new sequence into a Hubbard tree in the correct position
+#Question: """
 function addsequence(Htree,Kseq,(A,Bset),newpoint)
     if newpoint in collect(keys(Htree))
         print("warning: point already in tree")
