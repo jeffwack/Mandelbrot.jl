@@ -61,6 +61,10 @@ function Base.show(io::IO, symb::KneadingSymbol)
     print(io,alphabet[symb.value+1])
 end
 
+"""
+A kneading sequence is a combinatorial description of the orbit of an angle under doubling. For an angle theta,
+the kneading sequence of theta is defined as the theta itinerary of theta.
+"""
 const KneadingSequence = Sequence{KneadingSymbol}
 
 function KneadingSequence(angle::RationalAngle)
@@ -195,7 +199,7 @@ function admissible(intadd::InternalAddress)
     return admissible(KneadingSequence(intadd))
 end
 
-"""an internal address with aditional information in the form of angles which specify a cyclic ordering of kneading sequences"""
+"""An internal address with aditional information in the form of angles which specify a cyclic ordering of kneading sequences"""
 struct AngledInternalAddress
     addr::Vector{Int}
     angles::Vector{RationalAngle}
