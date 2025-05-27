@@ -1,4 +1,5 @@
 # Mandelbrot
+<a href="https://jeffwack.github.io/Mandelbrot.jl/dev/"><img src="https://img.shields.io/badge/docs-stable-blue.svg" alt="Documentation of latest stable version"></a>
 
 This package implements several algorithms related to complex quadratic dynamics. 
 - The spider algorithm calculates the center of a hyperbolic component of the Mandelbrot set from one of its external angles. [Read about the spider algorithm.](https://pi.math.cornell.edu/~hubbard/SpidersFinal.pdf)
@@ -8,3 +9,4 @@ This package implements several algorithms related to complex quadratic dynamics
 This package is a work in progress. To see what it can do, run treeplot(theta) where theta is a rational number with an odd denominator. The external ray of the Mandelbrot set with angle theta lands at a hyperbolic component, and this will plot the Hubbard tree corresponding to this hyperbolic component. Note that in Julia, rational numbers are declared with two slashes, as "3//5".
 
 [![Build Status](https://github.com/jeffwack111/Spiders.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/jeffwack111/Spiders.jl/actions/workflows/CI.yml?query=branch%3Amain)
+
