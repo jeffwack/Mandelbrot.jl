@@ -7,6 +7,8 @@ makedocs(
          modules  = [Mandelbrot],
          pages=[
                 "Home" => "index.md"
-               ])deploydocs(;
+               ])
+
+deploydocs(
     repo="github.com/jeffwack/Mandelbrot.jl",
 )
