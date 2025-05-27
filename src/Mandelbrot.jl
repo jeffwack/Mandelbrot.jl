@@ -7,15 +7,15 @@ export RationalAngle,
        HubbardTree, 
        AngledInternalAddress, 
        OrientedHubbardTree, 
-       parameter,
-       treeplot,
-       spiderplot
+       parameter
+       #treeplot,
+       #spiderplot
 
-using ColorSchemes,
-      Colors,
-      GLMakie,
-      IterTools,
+using IterTools,
       Primes
+      #ColorSchemes,
+      #Colors,
+      #GLMakie,
 
 include("Sequences.jl")
 include("angledoubling.jl")
