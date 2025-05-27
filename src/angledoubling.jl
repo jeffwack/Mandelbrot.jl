@@ -1,5 +1,3 @@
-
-
 struct RationalAngle <: Number
     value::Rational
     function RationalAngle(theta::Rational)
@@ -63,6 +61,10 @@ function Base.show(io::IO, symb::KneadingSymbol)
     print(io,alphabet[symb.value+1])
 end
 
+"""
+A kneading sequence is a combinatorial description of the orbit of an angle under doubling. For an angle theta,
+the kneading sequence of theta is defined as the theta itinerary of theta.
+"""
 const KneadingSequence = Sequence{KneadingSymbol}
 
 function KneadingSequence(angle::RationalAngle)
@@ -197,7 +199,7 @@ function admissible(intadd::InternalAddress)
     return admissible(KneadingSequence(intadd))
 end
 
-"""an internal address with aditional information in the form of angles which specify a cyclic ordering of kneading sequences"""
+"""An internal address with aditional information in the form of angles which specify a cyclic ordering of kneading sequences"""
 struct AngledInternalAddress
     addr::Vector{Int}
     angles::Vector{RationalAngle}
@@ -246,6 +248,7 @@ function firstaddress(intadd::Vector{Int})
     return AngledInternalAddress(intadd,angles)
 end
 
+#"""returns the internal address obtained by appending two times the last number of the internal address provided"""
 function bifurcate(aia::AngledInternalAddress)
     intadd = copy(aia.addr)
     intadd = append!(intadd,intadd[end]*2//1)
@@ -286,6 +289,7 @@ function orbit(seq::Sequence)
 end
 
 #TreesBook pg 145
+#"""returns the denominators of the angles of any angled internal address with the given integer values"""
 function denominators(S::InternalAddress)
     n = length(S) - 1
     #the last entry has no angle #page 143
