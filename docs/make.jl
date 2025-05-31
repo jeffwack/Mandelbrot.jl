@@ -7,6 +7,7 @@ makedocs(
          modules  = [Mandelbrot],
          pages=[
                 "Home" => "index.md"
+                "Kneading sequences" => "kneadingsequence.md"
                ])
 
 deploydocs(
