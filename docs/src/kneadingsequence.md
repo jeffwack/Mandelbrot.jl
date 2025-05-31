@@ -1,0 +1,2 @@
+# Kneading sequences
+A kneading sequence is an infinite sequence of symbols from the set $\{A,B,*\}$. This sequence encodes the itinerary of an angle $\theta$ under the doubling map, where $A$ denotes the interval $(\frac{\theta}{2},\frac{\theta+1}{2})$, $B$ the interval  $(\frac{\theta+1}{2},\frac{\theta}{2})$, and $*$ is a kind of wildcard, assigned to the angles which fall exactly in the set $\{\frac{\theta+1}{2},\frac{\theta}{2}\}$
