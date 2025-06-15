@@ -1,7 +1,7 @@
 struct HyperbolicComponent
     htree::OrientedHubbardTree
     onezero::Dict{KneadingSequence, Union{Nothing,Digit{2}}}
-    angle::RationalAngle
+    angle::Rational
     rays::Dict{BinaryExpansion,Vector{ComplexF64}}
     parameter::ComplexF64
     vertices::Dict{KneadingSequence, ComplexF64} #maps each vertex in the tree to a point in the plane

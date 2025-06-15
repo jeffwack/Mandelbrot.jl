@@ -1,13 +1,13 @@
 module Mandelbrot
 
-export RationalAngle,
-       BinaryExpansion, 
+export BinaryExpansion, 
        KneadingSequence, 
        InternalAddress, 
        HubbardTree, 
        AngledInternalAddress, 
        OrientedHubbardTree, 
-       parameter
+       parameter,
+       orbit
        #treeplot,
        #spiderplot
 

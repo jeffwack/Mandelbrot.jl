@@ -1,6 +1,6 @@
 struct Spider
-    angle::RationalAngle
-    orbit::Sequence{RationalAngle}
+    angle::Rational
+    orbit::Sequence
     kneading_sequence::KneadingSequence
     legs::Vector{Vector{ComplexF64}}
 end
@@ -10,7 +10,7 @@ function Base.show(io::IO, S::Spider)
     return println("A "*repr(S.angle)*"-spider with kneading sequence "*repr(S.kneading_sequence)*" and "*repr(npoints)*" points.")
 end
 
-function standardspider(theta::RationalAngle)
+function standardspider(theta)
     orb = orbit(theta)
     K = thetaitinerary(theta,orb) #the kneading sequence is calculated like so to avoid recalculating the orbit of theta
     legs = standardlegs(orb)
@@ -21,7 +21,7 @@ function standardlegs(orbit::Sequence)
     r = collect(LinRange(100,1,10))  #NOTE - it may be better to keep this as a 'linrange' but I don't understand what that means
     legs  = Vector{ComplexF64}[]
     for theta in orbit.items
-        push!(legs,(cos(theta.value*2*pi)+1.0im*sin(theta.value*2*pi)) .* r)
+        push!(legs,(cos(theta*2*pi)+1.0im*sin(theta*2*pi)) .* r)
     end
     legs[1] = legs[1] .- legs[1][end]
     return legs

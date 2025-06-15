@@ -1,42 +1,20 @@
-struct RationalAngle <: Number
-    value::Rational
-    function RationalAngle(theta::Rational)
-        if theta > 1
-            @warn "Creating angle from number larger than 1, only the fractional part will be kept."
-            new(mod(theta,1))
-        else
-            new(theta)
-        end
-    end
-end
+#This file defines methods for the description of the angle doubling map x->2*x mod 1 via symbolic dynamics
+#KneadingSequence
+#InternalAddress
+#AngledInternalAddress
+#BinaryExpansion
 
-import Base: +, *, /, <, >, numerator, denominator, convert
+function orbit(angle::T) where T
+    items = T[]
 
-phi::RationalAngle + theta::RationalAngle = RationalAngle(mod(phi.value+theta.value,1))
-theta::RationalAngle * s::Number = RationalAngle(mod(theta.value*s,1))
-s::Number * theta::RationalAngle = theta * s
-theta::RationalAngle / s::Number = RationalAngle(theta.value/s)
-phi::RationalAngle > theta::RationalAngle = phi.value > theta.value
-phi::RationalAngle < theta::RationalAngle = phi.value < theta.value
-
-denominator(theta::RationalAngle) = denominator(theta.value)
-numerator(theta::RationalAngle) = numerator(theta.value)
-
-function Base.show(io::IO, theta::RationalAngle)
-    return print(io,theta.value)
-end
-
-function orbit(angle::RationalAngle)
-    items = RationalAngle[]
-
-    while isempty(findall(x->x==angle,items))
+    while !(angle in items)
         push!(items,angle)
-        angle = angle*2
+        angle = angle*2 % 1
     end
 
     preperiod = findall(x->x==angle,items)[1] - 1
 
-    return Sequence{RationalAngle}(items,preperiod)
+    return Sequence{T}(items,preperiod)
     
 end
 
@@ -67,22 +45,18 @@ the kneading sequence of theta is defined as the theta itinerary of theta.
 """
 const KneadingSequence = Sequence{KneadingSymbol}
 
-function KneadingSequence(angle::RationalAngle)
+function KneadingSequence(angle)
     orb = orbit(angle)
     return thetaitinerary(angle,orb)
 end
 
-function KneadingSequence(theta::Rational)
-    return KneadingSequence(RationalAngle(theta))
-end
-
-function thetaitinerary(theta::RationalAngle,angle::RationalAngle)
+function thetaitinerary(theta,angle)
     return thetaitinerary(theta,orbit(angle))
 end
 
-function thetaitinerary(theta::RationalAngle,orb::Sequence)
+function thetaitinerary(theta,orb::Sequence)
     a = theta/2
-    b = theta/2+RationalAngle(1//2)
+    b = theta/2+1//2
     itinerary = KneadingSymbol[]
 
     for angle in orb.items
@@ -202,11 +176,11 @@ end
 """An internal address with aditional information in the form of angles which specify a cyclic ordering of kneading sequences"""
 struct AngledInternalAddress
     addr::Vector{Int}
-    angles::Vector{RationalAngle}
+    angles::Vector{Rational}
 end
 
 #Lemma 11.14 TreesBook page 146
-function AngledInternalAddress(theta::RationalAngle)
+function AngledInternalAddress(theta)
     intadd = InternalAddress(KneadingSequence(theta))
     denoms = denominators(intadd)
     angles = Rational[]
@@ -223,10 +197,6 @@ function AngledInternalAddress(theta::RationalAngle)
 
     return AngledInternalAddress(intadd.addr, angles)
 
-end
-
-function AngledInternalAddress(theta::Rational)
-    return AngledInternalAddress(RationalAngle(theta))
 end
 
 function Base.show(io::IO, AIA::AngledInternalAddress)
@@ -344,7 +314,7 @@ function numembeddings(theta::Rational)
     return numembeddings(internaladdress(theta))
 end
 
-function period(theta::RationalAngle)
+function period(theta)
     return orbit(theta).period
 end
 
@@ -380,13 +350,13 @@ const BinaryExpansion = Sequence{Digit{2}}
 
 """ The binary expansion of an angle is a sequence of 1s and 0s which can be interpreted either as place-value representation of the angle, or as an itinerary of the angle under angle doubling.
 """
-function BinaryExpansion(theta::RationalAngle)    
+function BinaryExpansion(theta)    
     orb = orbit(theta)
     itinerary = Digit{2}[]
     zero = Digit{2}(0)
     one = Digit{2}(1)
     for theta in orb.items
-        if theta < RationalAngle(1//2)
+        if theta < 1//2
             push!(itinerary,zero)
         else
             push!(itinerary,one)
