@@ -1,32 +1,30 @@
-@recipe(TreePlot,EHT) do scene #TODO add kwargs to toggle plotting the julia set and the external rays
-    Theme()
-end
-
-function Makie.plot!(myplot::TreePlot)
-    EHT = myplot.EHT[]
-    (EdgeList,Nodes) = adjlist(EHT.htree.adj)
-    criticalorbit = orbit(EHT.htree.criticalpoint)
+function treeplot(HC::HyperbolicComponent)
+    fig = Figure()
+    ax = Axis(fig[1,1])
+    htree = HC.htree
+    (EdgeList,Nodes) = Mandelbrot.adjlist(htree.adj)
+    criticalorbit = orbit(htree.criticalpoint)
 
     labels = []
     nodecolors = []
     for node in Nodes
         firstchar = node.items[1]
-        if firstchar == KneadingSymbol('*')
+        if firstchar == Mandelbrot.KneadingSymbol('*')
             push!(nodecolors,"black")
-        elseif firstchar == KneadingSymbol('A') #we are fully in one of the 4 regions
-            if EHT.onezero[node] == Digit{2}(0)
+        elseif firstchar == Mandelbrot.KneadingSymbol('A') #we are fully in one of the 4 regions
+            if HC.onezero[node] == Mandelbrot.Digit{2}(0)
                 push!(nodecolors,"blue")
-            elseif EHT.onezero[node] === nothing
+            elseif HC.onezero[node] === nothing
                 push!(nodecolors,"turquoise")
-            elseif EHT.onezero[node] == Digit{2}(1)
+            elseif HC.onezero[node] == Mandelbrot.Digit{2}(1)
                 push!(nodecolors,"green")
             end
-        elseif firstchar == KneadingSymbol('B')
-            if EHT.onezero[node] == Digit{2}(0)
+        elseif firstchar == Mandelbrot.KneadingSymbol('B')
+            if HC.onezero[node] == Mandelbrot.Digit{2}(0)
                 push!(nodecolors,"red")
-            elseif EHT.onezero[node] === nothing
+            elseif HC.onezero[node] === nothing
                 push!(nodecolors,"orangered2")
-            elseif EHT.onezero[node] == Digit{2}(1)
+            elseif HC.onezero[node] == Mandelbrot.Digit{2}(1)
                 push!(nodecolors,"orange")
             end
         end
@@ -41,7 +39,7 @@ function Makie.plot!(myplot::TreePlot)
         end
     end
 
-    zvalues = [EHT.vertices[node] for node in Nodes]
+    zvalues = [HC.vertices[node] for node in Nodes]
 
     pos = Point.(real.(zvalues),imag.(zvalues)) 
 
@@ -49,7 +47,7 @@ function Makie.plot!(myplot::TreePlot)
 
     for (ii,p) in enumerate(EdgeList)
         for n in p
-            cmplxedge = EHT.edges[Set([Nodes[ii],Nodes[n]])][2]
+            cmplxedge = HC.edges[Set([Nodes[ii],Nodes[n]])][2]
             realedge = Point.(real.(cmplxedge),imag.(cmplxedge)) 
             if nodecolors[ii] in colorsforinterior 
                 col = nodecolors[ii]
@@ -60,25 +58,25 @@ function Makie.plot!(myplot::TreePlot)
             elseif nodecolors[n] !== "black" 
                 col = nodecolors[n]
             end
-            lines!(myplot,realedge,color = col,linewidth = 1,transparency = true,overdraw = true)
+            lines!(ax,realedge,color = col,linewidth = 1,transparency = true,overdraw = true)
         end
     end
 
-    julia = inverseiterate(EHT.parameter,20)
-    scatter!(myplot,real(julia),imag(julia),markersize = 1,color = "black")
+    julia = Mandelbrot.inverseiterate(HC.parameter,20)
+    scatter!(ax,real(julia),imag(julia),markersize = 1,color = "black")
 
 
-    rays = collect(values(EHT.rays))
+    rays = collect(values(HC.rays))
     n = length(rays)
     for (j ,ray) in enumerate(rays)
-        lines!(myplot,real(ray),imag(ray),color = get(ColorSchemes.rainbow, float(j)/float(n)))
+        lines!(ax,real(ray),imag(ray),color = get(ColorSchemes.rainbow, float(j)/float(n)))
     end
 
-    scatter!(myplot,pos,color = nodecolors)
+    scatter!(ax,pos,color = nodecolors)
     tex = [node[2] for node in labels]
-    text!(myplot,pos,text = tex)
+    text!(ax,pos,text = tex)
     limits!(-2,2,-2,2)
-    return myplot
+    return fig
 end
 
 function treeplot(theta::Rational)

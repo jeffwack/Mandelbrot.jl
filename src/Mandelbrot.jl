@@ -5,11 +5,12 @@ export BinaryExpansion,
        InternalAddress, 
        HubbardTree, 
        AngledInternalAddress, 
-       OrientedHubbardTree, 
+       OrientedHubbardTree,
+       HyperbolicComponent,
        parameter,
-       orbit
-       #treeplot,
-       #spiderplot
+       orbit,
+       treeplot,
+       spiderplot
 
 using IterTools,
       Primes
@@ -33,5 +34,5 @@ include("spidermap.jl")
 
 include("renderfractal.jl")
 
-
+include("plots.jl")
 end

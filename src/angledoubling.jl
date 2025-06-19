@@ -365,7 +365,7 @@ function BinaryExpansion(theta)
     return Sequence{Digit{2}}(collect(itinerary),orb.preperiod)
 end
 
-function RationalAngle(bits::BinaryExpansion)
+function rationalangle(bits::BinaryExpansion)
     theta = 0//1
     k = bits.period
     r = 1//(1//1-(2//1)^-k)
@@ -378,5 +378,5 @@ function RationalAngle(bits::BinaryExpansion)
             end
         end
     end
-    return RationalAngle(theta)
+    return theta
 end

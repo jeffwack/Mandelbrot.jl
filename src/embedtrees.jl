@@ -15,7 +15,7 @@ function HyperbolicComponent(OHT::OrientedHubbardTree)
 
     criticalorbit = orbit(OHT.criticalpoint) #This is a sequence orbit
 
-    theta = RationalAngle(first(criticalanglesof(OZ,OHT)))
+    theta = rationalangle(first(criticalanglesof(OZ,OHT)))
     c = parameter(standardspider(theta),250)
 
     #critical orbit
@@ -35,8 +35,8 @@ function HyperbolicComponent(OHT::OrientedHubbardTree)
         end
     end
     
-    merge!(rays,dynamicrays(c,BinaryExpansion(RationalAngle(1//2)),100,10,40))
-    merge!(rays,dynamicrays(c,BinaryExpansion(RationalAngle(0//1)),100,10,40))
+    merge!(rays,dynamicrays(c,BinaryExpansion(1//2),100,10,40))
+    merge!(rays,dynamicrays(c,BinaryExpansion(0//1),100,10,40))
 
     paramorbit = [0.0+0.0im]
     n = period(theta)

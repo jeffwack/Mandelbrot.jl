@@ -137,7 +137,7 @@ function OrientedHubbardTree(AIA::AngledInternalAddress)
 end
 
 function OrientedHubbardTree(angle::Rational)
-    return OrientedHubbardTree(AngledInternalAddress(RationalAngle(angle)))
+    return OrientedHubbardTree(AngledInternalAddress(angle))
 end
  
 function orientnode(H,source::KneadingSequence,target::Pair{KneadingSequence, Vector{KneadingSequence}})
