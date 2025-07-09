@@ -7,6 +7,7 @@ makedocs(
          modules  = [Mandelbrot],
          pages=[
                 "Home" => "index.md"
+                "Introduction" => "introduction.md"
                 "Kneading sequences" => "kneadingsequence.md"
                 "Dynamic rays" => "dynamicrays.md"
                 "Equipotential lines" => "equipotentials.md"
