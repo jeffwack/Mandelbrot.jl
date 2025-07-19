@@ -1,6 +1,7 @@
 module Mandelbrot
 
-export BinaryExpansion, 
+export BinaryExpansion,
+       Digit,
        KneadingSequence, 
        InternalAddress, 
        HubbardTree, 

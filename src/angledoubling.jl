@@ -332,7 +332,7 @@ function num_partners(theta)
     return num_angles(kneadingsequence(theta))
 end
 
-struct Digit{N} <: Integer
+struct Digit{N} #<: Integer #not sure why I wanted this to be a subtype of integer
     value::Int
     function Digit{N}(value::Int) where N
         m = N-1
@@ -342,7 +342,7 @@ struct Digit{N} <: Integer
 end
 
 Base.hash(d::Digit,h::UInt64) = hash(d.value,h)
-
+Base.string(d::Digit) = Base.string(d.value) #defined because the show method for sequences calls string() on the items
 Base.show(io::IO, d::Digit{N}) where {N} = print(io, d.value)
 Base.Int(d::Digit) = d.value
 
