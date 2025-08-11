@@ -1,7 +1,10 @@
 using Mandelbrot
 using Documenter
+using DocumenterCitations
 
 DocMeta.setdocmeta!(Mandelbrot, :DocTestSetup, :(using Mandelbrot); recursive=true)
+
+bib = CitationBibliography(joinpath(@__DIR__, "src", "refs.bib"))
 
 makedocs(;
     modules=[Mandelbrot],
@@ -12,6 +15,7 @@ makedocs(;
         edit_link="main",
         assets=String[],
     ),
+    plugins=[bib],
     pages=[
         "Home" => "index.md",
                 "Introduction" => "introduction.md",
@@ -23,6 +27,8 @@ makedocs(;
                 "Images" => "images.md",
                 "Julia sets" => "juliasets.md",
                 "Examples of Hubbard trees" => "smallesttree.md",
+                "Plotting Functions" => "plotting.md",
+                "Bibliography" => "bibliography.md",
     ],
 )
 

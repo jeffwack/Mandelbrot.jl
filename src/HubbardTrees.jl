@@ -1,6 +1,5 @@
-#Algorithms from https://eudml.org/doc/283172
-#Existence of quadratic Hubbard trees
-#Henk Bruin, Alexandra Kafll, Dierk Schleicher
+# Hubbard tree construction algorithms
+# Implementation follows Bruin, Kaffl, Schleicher (2009)
 abstract type AbstractHubbardTree <: Graph end
 
 function criticalpoint(H)
@@ -12,9 +11,12 @@ struct HubbardTree <: AbstractHubbardTree
     criticalpoint::KneadingSequence
 end
 
-"""Creates a topological Hubbard tree from the given kneading sequence. See https://eudml.org/doc/283172
-Existence of quadratic Hubbard trees Henk Bruin, Alexandra Kafll, Dierk Schleicher 
-for info about the algorithm implemented here"""
+"""
+    HubbardTree(K::KneadingSequence)
+
+Creates a topological Hubbard tree from the given kneading sequence using the 
+triod algorithm described in [Bruin_Kaffl_Schleicher_2009](@cite).
+"""
 function HubbardTree(K::KneadingSequence)
     starK = prepend(K,KneadingSymbol('*'))
     #We begin with the critical orbit

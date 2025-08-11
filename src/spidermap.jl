@@ -171,6 +171,19 @@ function spideriterates(S0::Spider,n_iter::Int)
     return list
 end
 
+"""
+    parameter(S0::Spider, max_iter::Int)
+    parameter(theta::Rational, max_iter::Int)
+
+Computes the parameter (center) of a hyperbolic component using the spider algorithm 
+described in [Hubbard_Schleicher_1995](@cite).
+
+For a given external angle θ, this iteratively applies the spider map until convergence
+to find the parameter c at the center of the corresponding hyperbolic component.
+
+# References
+- [Hubbard_Schleicher_1995](@cite): The spider algorithm
+"""
 #TODO modify below to have tolerance-based convergence behavior
 function parameter(S0::Spider,max_iter::Int)
     S = deepcopy(S0)
