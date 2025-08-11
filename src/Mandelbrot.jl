@@ -11,7 +11,11 @@ export BinaryExpansion,
        parameter,
        orbit,
        treeplot,
-       spiderplot
+       spiderplot,
+       # Recipe-based plotting functions (implemented by MakieExt)
+       hubbardtreeplot, hubbardtreeplot!,
+       mandelbrotsetplot, mandelbrotsetplot!,
+       juliasetplot, juliasetplot!
 
 using IterTools,
       Primes
