@@ -85,8 +85,8 @@ end
 
 function plottree!(scene, H::HubbardTree)
 
-    (E, nodes) = adjlist(H.adj)
-    root = H.zero
+    (E, nodes) = Mandelbrot.adjlist(H.adj)
+    root = H.criticalpoint
     
     criticalorbit = orbit(root)
     
@@ -129,7 +129,7 @@ function generationposition(E,root)
         children = []
         for parent in parents
             #cycle E[parent] so that the grandparent is in the last position
-            s = findone(x-> x in T[end-1], E[parent])
+            s = Mandelbrot.findone(x-> x in T[end-1], E[parent])
             for u in circshift(E[parent],-s)
                 if !(u in T[end-1])
                     push!(children,u)

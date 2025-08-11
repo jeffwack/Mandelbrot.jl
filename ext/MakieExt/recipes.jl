@@ -24,8 +24,9 @@ Recipe for plotting Hubbard trees associated with hyperbolic components.
 ## Examples
 ```julia
 using Mandelbrot, GLMakie  # or CairoMakie, WGLMakie
-hubbardtree(1//3)  # Embedded in Julia set
-hubbardtree(1//7, style=:dendrogram)  # As dendrogram
+hubbardtreeplot(1//3)  # Embedded in Julia set
+hubbardtreeplot(1//7, style=:dendrogram)  # As dendrogram
+hubbardtreeplot(3//5, limits=(-1.5, 1.5, -1.0, 1.0))  # Custom limits
 ```
 """
 @recipe(HubbardTreePlot, angle) do scene
@@ -88,15 +89,15 @@ function plot_embedded_tree!(plot, angle::Rational)
     tex = [label[2] for label in labels]
     text!(plot, pos, text=tex)
     
-    # Set limits
+    # Set axis limits
     lims = plot[:limits][]
-    limits!(plot, lims[1], lims[2], lims[3], lims[4])
+    limits!(lims[1], lims[2], lims[3], lims[4])
 end
 
 function plot_dendrogram_tree!(plot, angle::Rational)
     H = HubbardTree(KneadingSequence(angle))
-    (E, nodes) = adjlist(H.adj)
-    root = H.zero
+    (E, nodes) = Mandelbrot.adjlist(H.adj)
+    root = H.criticalpoint
     
     criticalorbit = orbit(root)
     labels = []
@@ -252,13 +253,13 @@ function Makie.plot!(plot::MandelbrotSetPlot)
     )
     
     # Compute escape times
-    problem_array = mproblem_array(
+    problem_array = Mandelbrot.mproblem_array(
         patch, 
-        escape(plot[:escape_radius][]), 
+        Mandelbrot.escape(plot[:escape_radius][]), 
         plot[:max_iterations][]
     )
     
-    escape_data = escapetime.(problem_array)
+    escape_data = Mandelbrot.escapetime.(problem_array)
     
     # Apply coloring based on mode
     if plot[:color_mode][] == :escape_time
@@ -335,7 +336,7 @@ function Makie.plot!(plot::JuliaSetPlot)
     bounds = plot[2][]
     
     # Create Julia set patch
-    patch = julia_patch(0.0+0.0im, bounds)
+    patch = Mandelbrot.julia_patch(0.0+0.0im, bounds+0.0im)
     
     # Define the function
     f(z) = z*z + parameter
@@ -343,13 +344,13 @@ function Makie.plot!(plot::JuliaSetPlot)
     if plot[:binary_decomposition][]
         # Binary decomposition version
         epsilon = 1.0 / plot[:escape_threshold][]
-        problem_array = jproblem_array(patch, f, escape(1/epsilon), plot[:max_iterations][])
-        escape_data = escapetime.(problem_array)
+        problem_array = Mandelbrot.jproblem_array(patch, f, Mandelbrot.escape(1/epsilon), plot[:max_iterations][])
+        escape_data = Mandelbrot.escapetime.(problem_array)
         pic = assignbinary.(escape_data)
     else
         # Standard escape-time version
-        problem_array = jproblem_array(patch, f, escapeorconverge(plot[:escape_threshold][]), plot[:max_iterations][])
-        escape_data = escapetime.(problem_array)
+        problem_array = Mandelbrot.jproblem_array(patch, f, Mandelbrot.escapeorconverge(plot[:escape_threshold][]), plot[:max_iterations][])
+        escape_data = Mandelbrot.escapetime.(problem_array)
         pic = [x[1] for x in escape_data]
     end
     
@@ -376,20 +377,14 @@ end
 # ============================================================================
 
 """
-    juliaset(angle::Rational, bounds::Real; kwargs...)
+    juliasetplot(angle::Rational, bounds::Real; kwargs...)
 
 Plot the Julia set for the parameter corresponding to the given external angle.
 """
-function juliaset(angle::Rational, bounds::Real; kwargs...)
-    parameter = spideriterate(angle, 500)  # Use spider algorithm to find parameter
-    juliaset(parameter, bounds; kwargs...)
+function juliasetplot(angle::Rational, bounds::Real; kwargs...)
+    parameter = Mandelbrot.parameter(angle, 500)  # Use spider algorithm to find parameter
+    juliasetplot(parameter, bounds; kwargs...)
 end
 
-"""
-    mandelbrotset(; kwargs...)
-
-Plot the standard Mandelbrot set view (centered at origin, zoom=4).
-"""
-function mandelbrotset(; kwargs...)
-    mandelbrotset(0.0+0.0im, 4.0; kwargs...)
-end
+# Note: mandelbrotsetplot() convenience method removed to avoid method overwriting
+# Use: mandelbrotsetplot(0.0+0.0im, 4.0) for standard view
