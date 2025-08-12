@@ -131,7 +131,7 @@ function mapspider!(S::Spider)
         end
 
     else #preperiodic
-        p = S.preperiod 
+        p = S.orbit.preperiod 
         u = sqrt(S.legs[p+1][1]./λ)
         thetau = (angle(u)/(2*pi)+1)%1
 
