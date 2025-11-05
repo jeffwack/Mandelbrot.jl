@@ -8,7 +8,7 @@ using ColorSchemes, Colors
 __init__() = println("Mandelbrot visualization extension loaded (backend: $(Makie.current_backend()))")
 
 # Import existing functions to extend
-import Mandelbrot: treeplot, spiderplot
+import Mandelbrot: treeplot, spiderplot, showspider
 # Import recipe-based functions to extend  
 import Mandelbrot: hubbardtreeplot, hubbardtreeplot!, mandelbrotsetplot, mandelbrotsetplot!, juliasetplot, juliasetplot!
 

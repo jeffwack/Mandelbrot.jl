@@ -17,14 +17,17 @@ end
 
 function showspider(angle::Rational,frames::Int)
 
-    S0 = standardspider(angle)
+    S0 = Mandelbrot.standardspider(angle)
 
-    list = spideriterates(S0,frames)
+    list = Mandelbrot.spideriterates(S0,frames)
 
     fig = Figure()
     ax = Axis(fig[1, 1])
 
-    record(fig,"test.gif",1:frames; framerate = 3) do i
+    num = angle.num
+    den = angle.den
+    
+    record(fig,"$num.$den.gif",1:frames; framerate = 3) do i
         empty!(ax)
         spiderplot!(ax,list[i])
     end 

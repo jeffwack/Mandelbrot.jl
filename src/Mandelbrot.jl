@@ -11,7 +11,7 @@ export BinaryExpansion,
        parameter,
        orbit,
        treeplot,
-       spiderplot,
+       spiderplot, showspider,
        # Recipe-based plotting functions (implemented by MakieExt)
        hubbardtreeplot, hubbardtreeplot!,
        mandelbrotsetplot, mandelbrotsetplot!,

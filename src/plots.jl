@@ -2,6 +2,8 @@ function spiderplot end
 
 function treeplot end
 
+function showspider end
+
 # Recipe-based plotting functions (implemented by MakieExt extension)
 
 """
