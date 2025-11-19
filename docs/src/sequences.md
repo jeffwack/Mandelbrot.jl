@@ -15,3 +15,12 @@ end`
 a common pattern is 
 2,3,4,...,preperiod+1
 this can be constructed by the function "goesto"
+
+## Some interesting sequences:
+https://oeis.org/A001122
+https://oeis.org/A060477
+https://oeis.org/A059966
+https://oeis.org/A027375
+https://oeis.org/A001037
+https://oeis.org/A002326
+https://oeis.org/A000740
