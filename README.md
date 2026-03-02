@@ -9,4 +9,8 @@ This package implements several algorithms related to complex quadratic dynamics
 - The external angles of a hyperbolic component can be calculated from an angled internal address, describing the path to this component from zero. [Read about internal addresses.](https://arxiv.org/abs/math/9411238)
 - A combinatorial description of a Hubbard trees can be generated from a kneading sequence, and when oriented in the plane can produce external angles. [Read about Hubbard trees.](https://www.mat.univie.ac.at/~bruin/papers/bkafsch.pdf)
 
+```mermaid
+graph TD
+A[rational angle] --> O[Orbit]
 
+```
