@@ -9,19 +9,10 @@ export BinaryExpansion,
        OrientedHubbardTree,
        HyperbolicComponent,
        parameter,
-       orbit,
-       treeplot,
-       spiderplot, showspider,
-       # Recipe-based plotting functions (implemented by MakieExt)
-       hubbardtreeplot, hubbardtreeplot!,
-       mandelbrotsetplot, mandelbrotsetplot!,
-       juliasetplot, juliasetplot!
+       orbit
 
 using IterTools,
       Primes
-      #ColorSchemes,
-      #Colors,
-      #GLMakie,
 
 include("Sequences.jl")
 include("angledoubling.jl")
@@ -37,7 +28,4 @@ include("embedtrees.jl")
 include("spiderfuncs.jl")
 include("spidermap.jl")
 
-include("renderfractal.jl")
-
-include("plots.jl")
 end
