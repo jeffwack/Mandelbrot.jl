@@ -17,3 +17,13 @@ x, y = range(-0.65, -0.45; length=1600), range(0.51, 0.71; length=1600)
 heatmap(x, y, -log.(mandelbrot.(x' .+ y .* im)))
 ```
 
+```@example intro
+using CairoMakie, BrotViz, Mandelbrot
+fig, ax, plt = mandelbrotsetplot(0.0+0.0im, 4.0)
+fig
+```
+
+```@example intro
+fig, ax, plt = mandelbrotsetplot(-0.5+0.5im, 0.1, max_iterations=500)
+fig
+```

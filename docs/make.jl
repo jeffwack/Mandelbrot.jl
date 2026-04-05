@@ -1,4 +1,6 @@
 using Mandelbrot
+using CairoMakie
+using BrotViz
 using Documenter
 using DocumenterCitations
 

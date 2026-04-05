@@ -10,3 +10,18 @@ And where am I supposed to upload pictures?
 Other prerequisites:
 
 Julia Set
+
+```@example rays
+using CairoMakie, BrotViz, Mandelbrot
+S0 = Mandelbrot.standardspider(1//7)
+fig = Figure()
+ax = Axis(fig[1,1])
+spiderplot!(ax, S0)
+fig
+```
+
+```@example rays
+HC = HyperbolicComponent(1//7)
+rays = collect(values(HC.rays))
+plotrays(rays)
+```
