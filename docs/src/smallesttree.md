@@ -6,6 +6,11 @@ $\theta = \frac{12}{31}$
 
 $1 \rightarrow 2 \rightarrow 5$
 
+```@example trees
+using CairoMakie, BrotViz, Mandelbrot
+treeplot(12//31)
+```
+
 ## contains a branch point between the critical point and the critical value which is periodic and non-characteristic
 $1 \rightarrow 2 \rightarrow 6 \rightarrow 11$
 
@@ -14,8 +19,16 @@ $1 \rightarrow 3 \rightarrow 7$
 
 $\theta = \frac{19}{127}$
 
+```@example trees
+treeplot(19//127)
+```
+
 ## has beta and minus beta attached to a non-leaf
 $\theta = \frac{5}{31}$
+
+```@example trees
+treeplot(5//31)
+```
 
 ## Has preperiodic branch points
 $\theta = \frac{2}{9}$

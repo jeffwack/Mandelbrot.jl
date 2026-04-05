@@ -1,4 +1,6 @@
 using Mandelbrot
+using CairoMakie
+using BrotViz
 using Documenter
 using DocumenterCitations
 
@@ -21,13 +23,10 @@ makedocs(;
                 "Introduction" => "introduction.md",
                 "Kneading sequences" => "kneadingsequence.md",
                 "Dynamic rays" => "dynamicrays.md",
-                "Equipotential lines" => "equipotentials.md",
                 "Finding the angle of an oriented Hubbard Tree" => "embeddedhubbardtree2angle.md",
                 "Hubbard trees" => "hubbardtrees.md",
-                "Images" => "images.md",
                 "Julia sets" => "juliasets.md",
                 "Examples of Hubbard trees" => "smallesttree.md",
-                "Plotting Functions" => "plotting.md",
                 "Bibliography" => "bibliography.md",
     ],
 )
