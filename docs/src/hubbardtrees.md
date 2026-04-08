@@ -11,11 +11,12 @@ Answer: Yes. This happens when the denominator sequence has multiple entries gre
 
 ```@example htree
 using CairoMakie, BrotViz, Mandelbrot
-embeddedtreeplot(1//7)
+fig, ax = embeddedtreeplot(1//7)
+fig
 ```
 
 ```@example htree
-fig, ax, plt = generationtreeplot(1//7)
+fig, ax = generationtreeplot(1//7)
 fig
 ```
 

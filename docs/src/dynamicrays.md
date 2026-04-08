@@ -23,5 +23,12 @@ fig
 ```@example rays
 HC = HyperbolicComponent(1//7)
 rays = collect(values(HC.rays))
-plotrays(rays)
+fig, ax = plotrays(rays)
+fig
+```
+
+```@example rays
+c = parameter(1//7, 500)
+fig, ax = dynamicraysplot(c, 1//7)
+fig
 ```

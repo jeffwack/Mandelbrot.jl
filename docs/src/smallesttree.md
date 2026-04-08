@@ -8,7 +8,8 @@ $1 \rightarrow 2 \rightarrow 5$
 
 ```@example trees
 using CairoMakie, BrotViz, Mandelbrot
-embeddedtreeplot(12//31)
+fig, ax = embeddedtreeplot(12//31)
+fig
 ```
 
 ## contains a branch point between the critical point and the critical value which is periodic and non-characteristic
@@ -20,14 +21,16 @@ $1 \rightarrow 3 \rightarrow 7$
 $\theta = \frac{19}{127}$
 
 ```@example trees
-embeddedtreeplot(19//127)
+fig, ax = embeddedtreeplot(19//127)
+fig
 ```
 
 ## has beta and minus beta attached to a non-leaf
 $\theta = \frac{5}{31}$
 
 ```@example trees
-embeddedtreeplot(5//31)
+fig, ax = embeddedtreeplot(5//31)
+fig
 ```
 
 ## Has preperiodic branch points

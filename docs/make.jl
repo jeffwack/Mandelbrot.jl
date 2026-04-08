@@ -37,6 +37,7 @@ makedocs(;
                 "Julia sets" => "juliasets.md",
                 "Examples of Hubbard trees" => "smallesttree.md",
                 "Tree Plot Gallery" => "treeplots.md",
+                "Spider Algorithm" => "spider.md",
                 "Tests" => test_pages,
                 "Testing Guide" => "TESTING.md",
                 "Bibliography" => "bibliography.md",
