@@ -3,8 +3,11 @@ using CairoMakie
 using BrotViz
 using Documenter
 using DocumenterCitations
+using Literate
 
 DocMeta.setdocmeta!(Mandelbrot, :DocTestSetup, :(using Mandelbrot); recursive=true)
+
+Literate.markdown(joinpath(@__DIR__, "..", "examples", "golden_tests.jl"), joinpath(@__DIR__, "src"); flavor=Literate.DocumenterFlavor())
 
 bib = CitationBibliography(joinpath(@__DIR__, "src", "refs.bib"))
 
@@ -27,6 +30,7 @@ makedocs(;
                 "Hubbard trees" => "hubbardtrees.md",
                 "Julia sets" => "juliasets.md",
                 "Examples of Hubbard trees" => "smallesttree.md",
+                "Golden Tests" => "golden_tests.md",
                 "Bibliography" => "bibliography.md",
     ],
 )

@@ -3,6 +3,8 @@ BrotViz = "b2afee0e-5ae9-4674-9c86-b31c1a479060"
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 DocumenterCitations = "daee34ce-89f3-4625-b898-19384cb65244"
+DocumenterTools = "35a29f4d-8980-5a13-9543-d66fff28ecb8"
+Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
 LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
 Mandelbrot = "52854307-bbd1-4ac7-933f-adc0936abe8a"
 
