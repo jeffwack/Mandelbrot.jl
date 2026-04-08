@@ -99,6 +99,18 @@ function neighbortowards(graph,base,target)
     end
 end
 
+function leaf_vertices(G::Graph)
+    return Set(v for v in keys(G.adj) if length(G.adj[v]) == 1)
+end
+
+function edge_vertices(G::Graph)
+    return Set(v for v in keys(G.adj) if length(G.adj[v]) == 2)
+end
+
+function branch_vertices(G::Graph)
+    return Set(v for v in keys(G.adj) if length(G.adj[v]) >= 3)
+end
+
 function edgeset(graph::Dict)
     return Set(vcat([[Set([key,value]) for value in graph[key]] for key in keys(graph)]...))
 end

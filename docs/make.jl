@@ -7,7 +7,13 @@ using Literate
 
 DocMeta.setdocmeta!(Mandelbrot, :DocTestSetup, :(using Mandelbrot); recursive=true)
 
-Literate.markdown(joinpath(@__DIR__, "..", "examples", "golden_tests.jl"), joinpath(@__DIR__, "src"); flavor=Literate.DocumenterFlavor())
+tests_dir = joinpath(@__DIR__, "..", "test")
+generated_dir = joinpath(@__DIR__, "src", "generated")
+for testfile in filter(f -> endswith(f, ".jl") && f != "runtests.jl", readdir(tests_dir))
+    Literate.markdown(joinpath(tests_dir, testfile), generated_dir; flavor=Literate.DocumenterFlavor())
+end
+test_pages = [splitext(f)[1] => joinpath("generated", f)
+                 for f in filter(f -> endswith(f, ".md"), readdir(generated_dir))]
 
 bib = CitationBibliography(joinpath(@__DIR__, "src", "refs.bib"))
 
@@ -30,7 +36,9 @@ makedocs(;
                 "Hubbard trees" => "hubbardtrees.md",
                 "Julia sets" => "juliasets.md",
                 "Examples of Hubbard trees" => "smallesttree.md",
-                "Golden Tests" => "golden_tests.md",
+                "Tree Plot Gallery" => "treeplots.md",
+                "Tests" => test_pages,
+                "Testing Guide" => "TESTING.md",
                 "Bibliography" => "bibliography.md",
     ],
 )
