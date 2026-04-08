@@ -79,6 +79,10 @@ struct InternalAddress
     addr::Vector{Int}
 end
 
+function address(IA::InternalAddress)
+    return IA.addr
+end
+
 function Base.length(intadd::InternalAddress)
     return length(intadd.addr)
 end

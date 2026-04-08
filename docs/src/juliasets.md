@@ -6,16 +6,16 @@ Much has been said and written about Julia sets, and here are some of my favorit
 
 ```@example julia
 using CairoMakie, BrotViz, Mandelbrot
-fig, ax, plt = juliasetplot(-0.3+0.0im, 2.0)
+fig, ax = juliasetplot(-0.3+0.0im, 2.0)
 fig
 ```
 
 ```@example julia
-fig, ax, plt = juliasetplot(-0.7269+0.1889im, 1.5, binary_decomposition=true)
+fig, ax = juliasetplot(-0.7269+0.1889im, 1.5, binary_decomposition=true)
 fig
 ```
 
 ```@example julia
-fig, ax, plt = juliasetplot(1//7, 2.0)
+fig, ax = juliasetplot(1//7, 2.0)
 fig
 ```

@@ -19,11 +19,11 @@ heatmap(x, y, -log.(mandelbrot.(x' .+ y .* im)))
 
 ```@example intro
 using CairoMakie, BrotViz, Mandelbrot
-fig, ax, plt = mandelbrotsetplot(0.0+0.0im, 4.0)
+fig, ax, = mandelbrotsetplot(0.0+0.0im, 4.0)
 fig
 ```
 
 ```@example intro
-fig, ax, plt = mandelbrotsetplot(-0.5+0.5im, 0.1, max_iterations=500)
+fig, ax, = mandelbrotsetplot(-0.5+0.5im, 0.1, max_iterations=500)
 fig
 ```

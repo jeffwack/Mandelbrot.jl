@@ -11,15 +11,12 @@ Answer: Yes. This happens when the denominator sequence has multiple entries gre
 
 ```@example htree
 using CairoMakie, BrotViz, Mandelbrot
-fig, ax, plt = hubbardtreeplot(1//7)
+fig, ax = embeddedtreeplot(1//7)
 fig
 ```
 
 ```@example htree
-fig, ax, plt = hubbardtreeplot(1//7, style=:dendrogram)
+fig, ax = generationtreeplot(1//7)
 fig
 ```
 
-```@example htree
-treeplot(1//7)
-```
