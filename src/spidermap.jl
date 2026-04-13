@@ -1,7 +1,7 @@
 struct Spider
     angle::Rational
     orbit::Sequence
-    kneading_sequence::KneadingSequence
+    kneading_sequence::Sequence{KneadingSymbol{4}}
     legs::Vector{Vector{ComplexF64}}
 end
 
@@ -23,7 +23,7 @@ function standardlegs(orbit::Sequence)
     for theta in orbit.items
         push!(legs,(cos(theta*2*pi)+1.0im*sin(theta*2*pi)) .* r)
     end
-    legs[1] = legs[1] .- legs[1][end]
+    #legs[1] .+= -legs[1][end]
     return legs
 end
 
@@ -46,127 +46,85 @@ function stats(legs::Vector{Vector{ComplexF64}})
     println("~~~~~~~~~~~~~~~~~~~~")
     λ = legs[2][end]
     println(λ/2)
-    points = length(leg)*length(leg[1])
+    points = sum(length.(legs))
     println(points)
-    radius = sqrt(abs2(leg[1][1]))
+    radius = sqrt(abs2(legs[1][1]))
     println(radius)
 end
 
-function mapspider!(S::Spider)
-    λ = S.legs[2][end] #the parameter of our polynomial map z -> λ(1+z/2)^2
-    a = (angle(S.legs[1][1]/λ)/(2*pi)+1)%1 #the angle whose halves will define the boundary between regions A and B at infinity. in full turns
+function sector(boundary1, boundary2, theta, phi)                                                                                                                                # Shift everything so boundary1 sits at 0
+    b = mod(boundary2 - boundary1, 1)   # for a diameter, this is 0.5                                                                                                      
+    t = mod(theta - boundary1, 1)
+    p = mod(phi - boundary1, 1)                                                                                                                                            
 
+    if p == b
+        if t<b
+            return KneadingSymbol{4}("*₂")
+        else
+            return KneadingSymbol{4}("*₁")
+        end
+    elseif p == 0
+        if t<b
+            return KneadingSymbol{4}("*₁")
+        else
+            return KneadingSymbol{4}("*₂")
+        end
+    end                                                                                                                                                                    
+   
+    # Same region iff both fall on the same side of b                                                                                                                      
+    if (t < b) == (p < b)
+        return KneadingSymbol{4}("A")
+    else
+        return KneadingSymbol{4}("B")
+    end                                                                                                           
+  end    
+    
+function spider_map(S::Spider)
+    λ = S.legs[2][end] #the parameter of our polynomial map z -> λ(1+z/2)^2
+
+    star1 = (angle(sqrt(S.legs[1][1]/λ))/(2*pi)+1)%1
+    star2 = (star1 + 0.5)%1
+    
     n = length(S.orbit.items)
 
     newLegs = Vector{Vector{ComplexF64}}(undef,n)
 
-    #leg 1 goes first
-    newLegs[1] = path_sqrt(S.legs[2]./λ)
+    newLegs[1] = reverse(path_sqrt(reverse(S.legs[2])./λ)) #reverse so that path_sqrt goes from foot to shoulder
 
-    theta1 = (angle(newLegs[1][1])/(2*pi)+1)%1 #gives the angle of the shoulder in full turns
-    #this angle lays in region A by definition. 
+    #println(abs(newLegs[1][end]-1.0)) #This should be zero
+    
+    thetaA = (angle(newLegs[1][1])/(2*pi)+1)%1 #gives the angle of the shoulder in full turns
+    #this angle lays in region A by definition.
+   
+    sourceidxs = goestoidx(S.orbit)
 
-    if a/2 < theta1 && theta1 < (a+1)/2
-        cregion = KneadingSymbol('A')
-        dregion = KneadingSymbol('B')
-    else
-        cregion = KneadingSymbol('B')
-        dregion = KneadingSymbol('A')
+    for ii in 2:n
+        #first find the right half plane preimage of the shoulder
+        sourceleg = S.legs[sourceidxs[ii]]
+        u = sqrt(sourceleg[1]/λ)
+        thetau = (angle(u)/(2*pi)+1)%1
+        if S.kneading_sequence[ii] == sector(star1,star2,thetaA,thetau) #then this is the correct preimage
+            newLegs[ii] = path_sqrt(sourceleg./λ)
+        else
+            newLegs[ii] = -1 .* path_sqrt(sourceleg./λ)
+        end
     end
     
-    for ii in 2:n-1
-        #first find the right half plane preimage of the shoulder
-        u = sqrt(S.legs[ii+1][1]./λ)
-        thetau = (angle(u)/(2*pi)+1)%1
-
-        if a/2 < thetau && thetau < (a+1)/2 #thetau is in the connected region
-            if S.kneading_sequence[ii] == cregion #then this is the correct preimage
-                newLegs[ii] = path_sqrt(S.legs[ii+1]./λ)
-            else
-                newLegs[ii] = -1 .* path_sqrt(S.legs[ii+1]./λ)
-            end
-        else #thetau is in the disconnected region
-            if S.kneading_sequence[ii] == dregion #then this is the correct preimage
-                newLegs[ii] = path_sqrt(S.legs[ii+1]./λ)
-            else
-                newLegs[ii] =  -1 .* path_sqrt(S.legs[ii+1]./λ)
-            end
-        end
-    end
-
-    #TODO what is going on with the periodic case? kneading sequences never have 1s and 2s now
-    #we will break into periodic and preperiodic cases for the last leg
-    if S.orbit.preperiod == 0 #periodic
-        u = sqrt(S.legs[1][1]./λ)
-        thetau = (angle(u)/(2*pi)+1)%1
-        
-        if abs2(thetau - a/2) < abs2(thetau - (a+1)/2)
-            if cregion == KneadingSymbol('A')
-                if S.kneading_sequence.items[end] == '2'
-                    newLegs[end] = path_sqrt(S.legs[1]./λ)
-                else
-                    newLegs[end] = -1 .*path_sqrt(S.legs[1]./λ)
-                end
-            else
-                if S.kneading_sequence.items[end] == '1'
-                    newLegs[end] = path_sqrt(S.legs[1]./λ)
-                else
-                    newLegs[end] = -1 .*path_sqrt(S.legs[1]./λ)
-                end
-            end
-        else
-            if cregion == KneadingSymbol('A')
-                if S.kneading_sequence.items[end] == '1'
-                    newLegs[end] = path_sqrt(S.legs[1]./λ)
-                else
-                    newLegs[end] = -1 .*path_sqrt(S.legs[1]./λ)
-                end
-            else
-                if S.kneading_sequence.items[end] == '2'
-                    newLegs[end] = path_sqrt(S.legs[1]./λ)
-                else
-                    newLegs[end] = -1 .*path_sqrt(S.legs[1]./λ)
-                end
-            end
-        end
-
-    else #preperiodic
-        p = S.orbit.preperiod 
-        u = sqrt(S.legs[p+1][1]./λ)
-        thetau = (angle(u)/(2*pi)+1)%1
-
-        if a/2 < thetau && thetau < (a+1)/2 #thetau is in the connected region
-            if S.kneading_sequence.items[end] == cregion #then this is the correct preimage
-                newLegs[end] = path_sqrt(S.legs[p+1]./λ)
-            else
-                newLegs[end] = -1 .* path_sqrt(S.legs[p+1]./λ)
-            end
-        else #thetau is in the disconnected region
-            if S.kneading_sequence.items[end] == dregion #then this is the correct preimage
-                newLegs[end] = path_sqrt(S.legs[p+1]./λ)
-            else
-                newLegs[end] = -1 .* path_sqrt(S.legs[p+1]./λ)
-            end
-        end
-    end
-
     for leg in newLegs
         leg .+= (-1.0+0.0im)
+        leg .*= (2.0+0.0im)
     end
-    newLegs .*= (2.0+0.0im)
-
+    
     grow!(newLegs,10,10)
-    for ii in eachindex(S.legs)
-        S.legs[ii] = copy(newLegs[ii]) #done in this way so we can mutate S without mutating S
-    end
-    return S
+
+    return Spider(S.angle,S.orbit,S.kneading_sequence,newLegs)
 end
         
 function spideriterates(S0::Spider,n_iter::Int)
-    list = [deepcopy(S0)]
+    list = [S0]
 
     for i in 1:n_iter
-        push!(list,deepcopy(mapspider!(S0)))
+        push!(list, spider_map(list[end]))
     end
     return list
 end
@@ -185,11 +143,10 @@ to find the parameter c at the center of the corresponding hyperbolic component.
 - [Hubbard_Schleicher_1995](@cite): The spider algorithm
 """
 #TODO modify below to have tolerance-based convergence behavior
-function parameter(S0::Spider,max_iter::Int)
-    S = deepcopy(S0)
+function parameter(S::Spider,max_iter::Int)
     c_last = S.legs[2][end]/2 
     for ii in 1:max_iter
-        mapspider!(S)
+        S = spider_map(S)
         c = S.legs[2][end]/2
         #println(repr(c)*" delta "*repr(abs(c-c_last)))
         if abs(c-c_last)<(1e-15)

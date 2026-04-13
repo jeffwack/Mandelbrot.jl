@@ -1,6 +1,6 @@
 name = "Mandelbrot"
 uuid = "52854307-bbd1-4ac7-933f-adc0936abe8a"
-version = "0.5.1"
+version = "0.6.0"
 authors = ["Jeffrey Wack"]
 
 [deps]

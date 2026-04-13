@@ -3,12 +3,12 @@
 abstract type AbstractHubbardTree <: Graph end
 
 function criticalpoint(H)
-    return first(filter(x->x[1]==KneadingSymbol('*'),vertices(H)))
+    return first(filter(x->x[1]==KneadingSymbol{3}("*"),vertices(H)))
 end
 
 struct HubbardTree <: AbstractHubbardTree
-    adj::Dict{KneadingSequence,Set{KneadingSequence}}
-    criticalpoint::KneadingSequence
+    adj::Dict{Sequence{KneadingSymbol{3}},Set{Sequence{KneadingSymbol{3}}}}
+    criticalpoint::Sequence{KneadingSymbol{3}}
 end
 
 """
@@ -18,10 +18,11 @@ Creates a topological Hubbard tree from the given kneading sequence using the
 triod algorithm described in [Bruin_Kaffl_Schleicher_2009](@cite).
 """
 function HubbardTree(K::KneadingSequence)
-    starK = prepend(K,KneadingSymbol('*'))
+    K = Sequence{KneadingSymbol{3}}(K)
+    starK = prepend(K,KneadingSymbol{3}("*"))
     #We begin with the critical orbit
     markedpoints = copy(orbit(starK).items)
-
+    
     H = Dict([Pair(starK,Set([K])),Pair(K,Set([starK]))])
     #println(H)
     for point in markedpoints[3:end]
@@ -36,9 +37,7 @@ end
 
 function HubbardTree(intadd::InternalAddress)
     K = KneadingSequence(intadd)
-    seq = copy(K.items)
-    seq[end] = KneadingSymbol('*')
-    return HubbardTree(Sequence{KneadingSymbol}(seq,0))
+    return HubbardTree(K)
 end
 
 #"""uses the triod map repeatedly to insert a new sequence into a Hubbard tree in the correct position
@@ -91,12 +90,12 @@ function iteratetriod(K::Sequence,triod::Tuple{Sequence,Sequence,Sequence})
         if triod[1].items[1] == triod[2].items[1] && triod[1].items[1] == triod[3].items[1]
             triod = (shift(triod[1]),shift(triod[2]),shift(triod[3]))
 
-        elseif Set([triod[1].items[1],triod[2].items[1],triod[3].items[1]]) == Set([KneadingSymbol('A'),KneadingSymbol('B'),KneadingSymbol('*')]) 
-            if triod[1].items[1] == KneadingSymbol('*')
+        elseif Set([triod[1].items[1],triod[2].items[1],triod[3].items[1]]) == Set([KneadingSymbol{3}("A"),KneadingSymbol{3}("B"),KneadingSymbol{3}("*")]) 
+            if triod[1].items[1] == KneadingSymbol{3}("*")
                 middle = triodList[1][1]
-            elseif triod[2].items[1] == KneadingSymbol('*')
+            elseif triod[2].items[1] == KneadingSymbol{3}("*")
                 middle = triodList[1][2]
-            elseif triod[3].items[1] == KneadingSymbol('*')
+            elseif triod[3].items[1] == KneadingSymbol{3}("*")
                 middle = triodList[1][3]
             end
             
@@ -142,11 +141,11 @@ function majorityvote(arms::Tuple{Sequence,Sequence,Sequence})
 end
 
 function majorityvote(S::Sequence) 
-    newitems = KneadingSymbol[]
+    newitems = KneadingSymbol{3}[]
     for triod in S.items
         push!(newitems,majorityvote(triod))
     end
-    return Sequence{KneadingSymbol}(newitems,S.preperiod) 
+    return Sequence{KneadingSymbol{3}}(newitems,S.preperiod) 
 end
 
 #This function is a wrapper for findall which throws an error if there is not exactly one element satisfying f
