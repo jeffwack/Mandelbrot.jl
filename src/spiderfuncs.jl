@@ -1,40 +1,76 @@
 function region(point::Complex,boundary::Vector{<:Complex})
-    x2 = real(point)
-    y2 = imag(point)
-
     intersections = 0 
 
     for pair in partition(boundary,2,1)
-        x3 = real(pair[1])
-        y3 = imag(pair[1])
-        
-        x4 = real(pair[2])
-        y4 = imag(pair[2])
-
-        tn = y3*(x3-x4) - x3*(y3-y4)
-        un = x3*y2-y3*x2
-        d = y2*(x3-x4) - x2*(y3-y4)
-
-        if sign(tn)*sign(d) == -1
-            intersections += 0
-        elseif sign(un)*sign(d) == -1
-            intersections += 0
-        elseif abs(tn) > abs(d)
-            intersections += 0
-        elseif abs(un) > abs(d)
-            intersections += 0
-        else
+        if test_intersection(pair[1], pair[2], 0.0+0.0im, point)
             intersections += 1
         end
     end
 
     if intersections%2 == 0
-        return 'A'
+        return KneadingSymbol("A")
     else
-        return 'B'
+        return KneadingSymbol("B")
     end
 
 end
+
+#This function starts at the 'shoulder' (path[1]) and works in towards the 'foot' (path[end])
+function path_sqrt(path::Vector{ComplexF64})
+    branch = 1
+    newpath = [sqrt(path[1])]
+    cut = (0.0 + 0.0im, -1000 + 0.0im)
+    for segment in partition(path,2,1)
+        if test_intersection(cut...,segment...)
+            branch *= -1
+        end
+        append!(newpath,branch*sqrt(segment[2]))
+    end
+    return newpath
+end
+
+function test_intersection(z1::Complex,z2::Complex,w1::Complex,w2::Complex)
+    
+    x1 = real(z1)
+    y1 = imag(z1)
+
+    x2 = real(z2)
+    y2 = imag(z2)
+
+    x3 = real(w1)
+    y3 = imag(w1)
+
+    x4 = real(w2)
+    y4 = imag(w2)
+
+    tn = (x1 - x3)*(y3 - y4) - (y1 - y3)*(x3 - x4)
+    un = (x1 - x3)*(y1 - y2) - (y1 - y3)*(x1 - x2)
+    d = (x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4)
+
+    if d == 0
+        return false
+    elseif sign(tn)*sign(d) == -1
+        return false
+    elseif sign(un)*sign(d) == -1
+        return false
+    elseif abs2(tn) > abs2(d)
+        return false
+    elseif abs2(un) > abs2(d)
+        return false
+    else
+        return true
+    end
+
+end
+
+
+###
+# Everything below this is to be deleted after confirming nothing depends on it
+
+#function angle(z1::Complex,z2::Complex,z3::Complex)
+    #calculate the angle at z2 formed by the segments (z1,z2) and (z2,z3)
+#end
+
 
 function cross_cut(z1::Complex,z2::Complex)
     if sign(imag(z1)) == sign(imag(z2))
@@ -90,55 +126,3 @@ function lift_path(path::Vector{<:Complex},λ::Complex,branch)
     return lift
 
 end
-
-function path_sqrt(path::Vector{ComplexF64})
-    branch = 1
-    newpath = [sqrt(path[1])]
-    cut = (0.0 + 0.0im, -1000 + 0.0im)
-    for segment in partition(path,2,1)
-        if test_intersection(cut...,segment...)
-            branch *= -1
-        end
-        append!(newpath,branch*sqrt(segment[2]))
-    end
-    return newpath
-end
-
-function test_intersection(z1::Complex,z2::Complex,w1::Complex,w2::Complex)
-    
-    x1 = real(z1)
-    y1 = imag(z1)
-
-    x2 = real(z2)
-    y2 = imag(z2)
-
-    x3 = real(w1)
-    y3 = imag(w1)
-
-    x4 = real(w2)
-    y4 = imag(w2)
-
-    tn = (x1 - x3)*(y3 - y4) - (y1 - y3)*(x3 - x4)
-    un = (x1 - x3)*(y1 - y2) - (y1 - y3)*(x1 - x2)
-    d = (x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4)
-
-    if d == 0
-        return false
-    elseif sign(tn)*sign(d) == -1
-        return false
-    elseif sign(un)*sign(d) == -1
-        return false
-    elseif abs2(tn) > abs2(d)
-        return false
-    elseif abs2(un) > abs2(d)
-        return false
-    else
-        return true
-    end
-
-end
-
-#function angle(z1::Complex,z2::Complex,z3::Complex)
-    #calculate the angle at z2 formed by the segments (z1,z2) and (z2,z3)
-#end
-

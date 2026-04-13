@@ -21,7 +21,7 @@ end
 struct KneadingSymbol #<: Integer <--- got rid of this due to issues with converting to a string
     value::Int
     function KneadingSymbol(value::Int)
-        0 <= value <=2  || error("Value must be in range [0, 2]")
+        1 <= value <= 4  || error("Value must be in range [1, 4]")
         new(value)
     end
 end
@@ -29,14 +29,14 @@ end
 #necessary for using kneading sequences as dictionary keys
 Base.hash(d::KneadingSymbol,h::UInt64) = hash(d.value,h)
 
-alphabet = ['*','A','B']
+alphabet = ["*₁","*₂","A","B"]
 
-function KneadingSymbol(c::Char)
-    return KneadingSymbol(first(findall(x->x==c,alphabet))-1)
+function KneadingSymbol(c::String)
+    return KneadingSymbol(first(findall(x->x==c,alphabet)))
 end
 
 function Base.show(io::IO, symb::KneadingSymbol) 
-    print(io,alphabet[symb.value+1])
+    print(io,alphabet[symb.value])
 end
 
 """
@@ -61,13 +61,13 @@ function thetaitinerary(theta,orb::Sequence)
 
     for angle in orb.items
         if angle == a
-            push!(itinerary,KneadingSymbol('*'))
+            push!(itinerary,KneadingSymbol("*₁"))
         elseif angle == b
-            push!(itinerary,KneadingSymbol('*'))
+            push!(itinerary,KneadingSymbol("*₂"))
         elseif angle > a && angle < b
-            push!(itinerary,KneadingSymbol('A'))
+            push!(itinerary,KneadingSymbol("A"))
         else
-            push!(itinerary,KneadingSymbol('B'))
+            push!(itinerary,KneadingSymbol("B"))
         end
     end
     

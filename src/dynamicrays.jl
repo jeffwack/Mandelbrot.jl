@@ -6,12 +6,19 @@ end
 
 ## Conjecture: if the collection of rays is a sequence of rays, we will not need this function.
 ## Question: Is it possible to update the rays in a mutating and not problematic way?
+# Now this is also used in spidermap we should move it to Sequence.jl
 function goesto(seq::Sequence)
     l = seq.preperiod
     k = seq.period
     idx = append!(collect(1:l).+1,circshift(l+1:l+k,-1))
     return [(seq.items[x],seq.items[y]) for (x,y) in enumerate(idx)]
-end 
+end
+
+function goestoidx(seq::Sequence)
+    l = seq.preperiod
+    k = seq.period
+    return append!(collect(1:l).+1,circshift(l+1:l+k,-1))
+end
 
 function standardrays(theta::Rational,c::Complex,R::Real,res::Int)
     orb = orbit(theta)
