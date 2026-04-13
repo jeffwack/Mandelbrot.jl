@@ -1,19 +1,3 @@
-function region(point::Complex,boundary::Vector{<:Complex})
-    intersections = 0 
-
-    for pair in partition(boundary,2,1)
-        if test_intersection(pair[1], pair[2], 0.0+0.0im, point)
-            intersections += 1
-        end
-    end
-
-    if intersections%2 == 0
-        return KneadingSymbol("A")
-    else
-        return KneadingSymbol("B")
-    end
-
-end
 
 #This function starts at the 'shoulder' (path[1]) and works in towards the 'foot' (path[end])
 function path_sqrt(path::Vector{ComplexF64})
@@ -60,69 +44,5 @@ function test_intersection(z1::Complex,z2::Complex,w1::Complex,w2::Complex)
     else
         return true
     end
-
-end
-
-
-###
-# Everything below this is to be deleted after confirming nothing depends on it
-
-#function angle(z1::Complex,z2::Complex,z3::Complex)
-    #calculate the angle at z2 formed by the segments (z1,z2) and (z2,z3)
-#end
-
-
-function cross_cut(z1::Complex,z2::Complex)
-    if sign(imag(z1)) == sign(imag(z2))
-        return 1
-    else
-        if sign(real(z1)) == sign(real(z2))
-            if real(z1) >= 0
-                return 1
-            else
-                return -1
-            end
-        else
-            #At this stage what we know is that both signs change
-            #Now our points are sorted, so the line from a to b crosses the y-axis from left to right
-
-            if real(z1) < real(z2)
-                a = z1
-                b = z2
-            else
-                a = z2
-                b = z1
-            end
-            
-            diff = b-a
-            rise = imag(diff)
-            run = real(diff)
-            x = real(a)
-            y = imag(b)
-
-            #The line segment crosses the cut when the magnitude of the slope is larger than the slope of the line 
-            #connecting the first point to the origin
-            if abs(rise/run)>=abs(y/x)
-                return -1
-            else
-                return 1
-            end    
-        end
-    end
-end
-
-function lift_path(path::Vector{<:Complex},λ::Complex,branch)
-
-    lift = [P_inv(path[1],λ,branch)]
-
-    for pair in partition(path,2,1)
-        #does the segment divided by lambda cross the cut?
-        a = pair[1]/λ
-        b = pair[2]/λ
-        branch = branch * cross_cut(a,b)
-        append!(lift,P_inv(pair[2],λ,branch))
-    end
-    
-    return lift
 
 end

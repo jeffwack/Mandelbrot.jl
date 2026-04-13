@@ -18,32 +18,69 @@ function orbit(angle::T) where T
     
 end
 
-struct KneadingSymbol #<: Integer <--- got rid of this due to issues with converting to a string
+struct KneadingSymbol{N}
     value::Int
-    function KneadingSymbol(value::Int)
-        1 <= value <= 4  || error("Value must be in range [1, 4]")
-        new(value)
+    function KneadingSymbol{N}(value::Int) where N
+        1 <= value <= N || error("Value must be in range [1, $N]")
+        new{N}(value)
     end
 end
 
-#necessary for using kneading sequences as dictionary keys
-Base.hash(d::KneadingSymbol,h::UInt64) = hash(d.value,h)
+Base.hash(k::KneadingSymbol{N}, h::UInt64) where N = hash((N, k.value), h)
 
-alphabet = ["*₁","*₂","A","B"]
+const KNEADING_ALPHABETS = Dict(
+    2 => ["A", "B"],
+    3 => ["A", "B", "*"],
+    4 => ["A", "B", "*₁", "*₂"],
+)
 
-function KneadingSymbol(c::String)
-    return KneadingSymbol(first(findall(x->x==c,alphabet)))
+function KneadingSymbol{N}(s::String) where N
+    idx = findfirst(==(s), KNEADING_ALPHABETS[N])
+    idx === nothing && error("\"$s\" is not in the $N-symbol alphabet")
+    return KneadingSymbol{N}(idx)
 end
 
-function Base.show(io::IO, symb::KneadingSymbol) 
-    print(io,alphabet[symb.value])
+function Base.show(io::IO, k::KneadingSymbol{N}) where N
+    print(io, KNEADING_ALPHABETS[N][k.value])
+end
+
+# Conversion: 2→3 (embed: A,B stay as A,B)
+function KneadingSymbol{3}(k::KneadingSymbol{2})
+    return KneadingSymbol{3}(k.value)
+end
+
+# Conversion: 4→3 (forget: both stars collapse to single star)
+function KneadingSymbol{3}(k::KneadingSymbol{4})
+    if k.value <= 2  # A or B
+        return KneadingSymbol{3}(k.value)
+    else  # *₁ or *₂ both become *
+        return KneadingSymbol{3}(3)
+    end
+end
+
+# Identity: 3→3
+KneadingSymbol{3}(k::KneadingSymbol{3}) = k
+
+# Convert any KneadingSequence to {3}
+function Sequence{KneadingSymbol{3}}(seq::Sequence{KneadingSymbol{4}})
+    return Sequence{KneadingSymbol{3}}(KneadingSymbol{3}.(seq.items), seq.preperiod)
+end
+
+# Convert any KneadingSequence to {3}
+function Sequence{KneadingSymbol{3}}(seq::Sequence{KneadingSymbol{2}})
+    symblist = KneadingSymbol{3}.(copy(seq.items))
+    pre = seq.preperiod    
+    if seq.preperiod == 0
+        symblist[end] = KneadingSymbol{3}("*")
+    end
+    return Sequence{KneadingSymbol{3}}(symblist, seq.preperiod)
 end
 
 """
 A kneading sequence is a combinatorial description of the orbit of an angle under doubling. For an angle theta,
 the kneading sequence of theta is defined as the theta itinerary of theta.
 """
-const KneadingSequence = Sequence{KneadingSymbol}
+const KneadingSequence = Sequence{<:KneadingSymbol}
 
 function KneadingSequence(angle)
     orb = orbit(angle)
@@ -57,21 +94,21 @@ end
 function thetaitinerary(theta,orb::Sequence)
     a = theta/2
     b = theta/2+1//2
-    itinerary = KneadingSymbol[]
+    itinerary = KneadingSymbol{4}[]
 
     for angle in orb.items
         if angle == a
-            push!(itinerary,KneadingSymbol("*₁"))
+            push!(itinerary,KneadingSymbol{4}("*₁"))
         elseif angle == b
-            push!(itinerary,KneadingSymbol("*₂"))
+            push!(itinerary,KneadingSymbol{4}("*₂"))
         elseif angle > a && angle < b
-            push!(itinerary,KneadingSymbol("A"))
+            push!(itinerary,KneadingSymbol{4}("A"))
         else
-            push!(itinerary,KneadingSymbol("B"))
+            push!(itinerary,KneadingSymbol{4}("B"))
         end
     end
-    
-    return Sequence{KneadingSymbol}(itinerary,orb.preperiod)
+
+    return Sequence{KneadingSymbol{4}}(itinerary,orb.preperiod)
 end
 
 """An internal address is an increasing sequence of integers which describes a kneading sequence"""
@@ -128,17 +165,17 @@ end
 function KneadingSequence(intadd::InternalAddress)
     address = copy(intadd.addr)
     if address == [1]
-        return Sequence{KneadingSymbol}(KneadingSymbol[KneadingSymbol('A')],0)
+        return Sequence{KneadingSymbol{2}}([KneadingSymbol{2}("A")],0)
     else
         s = pop!(address)
         K = KneadingSequence(InternalAddress(address))
         R = K.items[mod1.(1:s-1,end)]
-        if K.items[mod1(s,end)] == KneadingSymbol('A')
-            push!(R,KneadingSymbol('B'))
+        if K.items[mod1(s,end)] == KneadingSymbol{2}("A")
+            push!(R,KneadingSymbol{2}("B"))
         else
-            push!(R,KneadingSymbol('A'))
+            push!(R,KneadingSymbol{2}("A"))
         end
-        return Sequence{KneadingSymbol}(R,0)
+        return Sequence{KneadingSymbol{2}}(R,0)
     end
 end
 
