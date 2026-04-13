@@ -7,8 +7,8 @@ function criticalpoint(H)
 end
 
 struct HubbardTree <: AbstractHubbardTree
-    adj::Dict{KneadingSequence,Set{KneadingSequence}}
-    criticalpoint::KneadingSequence
+    adj::Dict{Sequence{KneadingSymbol{3}},Set{Sequence{KneadingSymbol{3}}}}
+    criticalpoint::Sequence{KneadingSymbol{3}}
 end
 
 """

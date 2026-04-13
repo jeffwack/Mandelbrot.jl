@@ -4,8 +4,8 @@ It can be constructed from an AngledInternalAddress
 or a RationalAngle, and it can be used to construct a HyperbolicComponent"
 struct OrientedHubbardTree <: AbstractHubbardTree
     adj::Dict{Sequence,Vector{Sequence}}
-    criticalpoint::KneadingSequence
-    boundary::Vector{KneadingSequence}
+    criticalpoint::Sequence{KneadingSymbol{3}}
+    boundary::Vector{Sequence{KneadingSymbol{3}}}
 end
 
 function forwardimages(htree)
@@ -71,7 +71,7 @@ end
 function characteristicset(H)
     nodes = collect(keys(H.adj))
     periodicnodes = filter(x -> x.preperiod == 0 , nodes)
-    C = Sequence{KneadingSymbol}[]
+    C = Sequence{KneadingSymbol{3}}[]
     for node in periodicnodes
         if ischaracteristic(H,node)
             push!(C,node)
@@ -122,13 +122,13 @@ function OrientedHubbardTree(AIA::AngledInternalAddress)
         push!(orientedH,Pair(node,collect(H.adj[node])))
     end
     
-    mbeta = KneadingSequence(KneadingSymbol[KneadingSymbol('A'),KneadingSymbol('B')],1)
+    mbeta = Sequence{KneadingSymbol{3}}(KneadingSymbol{3}[KneadingSymbol{3}("A"),KneadingSymbol{3}("B")],1)
     #deal with beta orbit
     for node in orbit(mbeta).items
         push!(orientedH,Pair(node,collect(H.adj[node])))
     end
 
-    if orientedH[zero][1].items[1] == KneadingSymbol('B')
+    if orientedH[zero][1].items[1] == KneadingSymbol{3}("B")
         circshift!(orientedH[zero],1)
     end
 
@@ -140,7 +140,7 @@ function OrientedHubbardTree(angle::Rational)
     return OrientedHubbardTree(AngledInternalAddress(angle))
 end
  
-function orientnode(H,source::KneadingSequence,target::Pair{KneadingSequence, Vector{KneadingSequence}})
+function orientnode(H,source,target)
     
     sourcenode = source
     sourceneighbors = H[source]
@@ -191,7 +191,7 @@ function orientcharacteristic(H,node,ang)
     return Pair(node,oriented)
 end
 
-function orientpreimages(H,P,target::Pair{KneadingSequence, Vector{KneadingSequence}})
+function orientpreimages(H,P,target)
     keyvaluepairs = Dict(target)
     activetargets = [target[1]]
     while !isempty(activetargets)
@@ -211,8 +211,8 @@ function orientpreimages(H,P,target::Pair{KneadingSequence, Vector{KneadingSeque
 end
 
 function addboundary(htree::HubbardTree)
-    beta = KneadingSequence(KneadingSymbol[KneadingSymbol('B')],0)
-    mbeta = KneadingSequence(KneadingSymbol[KneadingSymbol('A'),KneadingSymbol('B')],1)
+    beta = Sequence{KneadingSymbol{3}}(KneadingSymbol{3}[KneadingSymbol{3}("B")],0)
+    mbeta = Sequence{KneadingSymbol{3}}(KneadingSymbol{3}[KneadingSymbol{3}("A"),KneadingSymbol{3}("B")],1)
     H = extend(htree,beta)
     H = extend(H,mbeta)
     

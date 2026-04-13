@@ -1,11 +1,11 @@
 struct HyperbolicComponent
     htree::OrientedHubbardTree
-    onezero::Dict{KneadingSequence, Union{Nothing,Digit{2}}}
+    onezero::Dict{Sequence{KneadingSymbol{3}}, Union{Nothing,Digit{2}}}
     angle::Rational
     rays::Dict{BinaryExpansion,Vector{ComplexF64}}
     parameter::ComplexF64
-    vertices::Dict{KneadingSequence, ComplexF64} #maps each vertex in the tree to a point in the plane
-    edges::Dict{Set{KneadingSequence}, Tuple{KneadingSequence, Vector{ComplexF64}}} #maps each edge to an oriented polyline
+    vertices::Dict{Sequence{KneadingSymbol{3}}, ComplexF64}
+    edges::Dict{Set{Sequence{KneadingSymbol{3}}}, Tuple{Sequence{KneadingSymbol{3}}, Vector{ComplexF64}}}
 end
 
 function HyperbolicComponent(OHT::OrientedHubbardTree)
@@ -48,8 +48,8 @@ function HyperbolicComponent(OHT::OrientedHubbardTree)
 
     zvalues = Dict{Sequence,ComplexF64}()
     for node in keys(OHT.adj)
-        if KneadingSymbol('*') in node.items #then it is in the critical orbit
-            idx = findone(x->x==KneadingSymbol('*'),node.items)
+        if KneadingSymbol{3}("*") in node.items #then it is in the critical orbit
+            idx = findone(x->x==KneadingSymbol{3}("*"),node.items)
             push!(zvalues,Pair(node,paramorbit[mod1(n-idx+2,n)]))
         else
             list = [rays[angle][end] for angle in anglelist[node]]
@@ -379,8 +379,8 @@ function allanglesof(OZ,OH)
         end
     end
 
-    push!(pairs,Pair(KneadingSequence(KneadingSymbol[KneadingSymbol('B')],0),[BinaryExpansion([Digit{2}(0)],0)]))
-    push!(pairs,Pair(KneadingSequence(KneadingSymbol[KneadingSymbol('A'),KneadingSymbol('B')],1),[BinaryExpansion([Digit{2}(1),Digit{2}(0)],1)]))
+    push!(pairs,Pair(Sequence{KneadingSymbol{3}}(KneadingSymbol{3}[KneadingSymbol{3}("B")],0),[BinaryExpansion([Digit{2}(0)],0)]))
+    push!(pairs,Pair(Sequence{KneadingSymbol{3}}(KneadingSymbol{3}[KneadingSymbol{3}("A"),KneadingSymbol{3}("B")],1),[BinaryExpansion([Digit{2}(1),Digit{2}(0)],1)]))
 
     #last we do the preperiodic branch points. This is slow!
     for node in keys(H)
