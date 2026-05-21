@@ -324,8 +324,8 @@ function denominators(S::InternalAddress)
 end
 
 function newdenominator(AIA::AngledInternalAddress,new::Int)
-    K = kneadingsequence(AIA.addr)
-    p = rhoSequence(K)
+    K = KneadingSequence(InternalAddress(AIA.addr))
+    p = n -> rhosequence(K, n)
 
     r = mod1(new,AIA.addr[end])
     orb = p(r)
