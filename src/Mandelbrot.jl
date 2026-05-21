@@ -13,7 +13,10 @@ export BinaryExpansion,
        branch_vertices,
        HyperbolicComponent,
        parameter,
-       orbit
+       orbit,
+       characteristicset,
+       characteristicorbits,
+       ischaracteristic
 
 using IterTools,
       Primes
