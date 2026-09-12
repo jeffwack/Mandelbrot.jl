@@ -36,11 +36,6 @@ end
 #such that the critical value is contained in one component and 0 and all other points
 #zk not= z are in the other one
 function ischaracteristic(htree,periodicpoint)
-    # A characteristic point must be a branch point (≥ 3 incident edges).
-    # Calling globalarms on a non-branch node can crash on degenerate trees
-    # (e.g. the trivial period-1 tree, where the only node has a self-loop),
-    # so short-circuit before reaching it.
-    length(htree.adj[periodicpoint]) < 3 && return false
 
     glarms = globalarms(htree.adj,periodicpoint)
 
