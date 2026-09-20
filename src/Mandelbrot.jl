@@ -1,31 +1,33 @@
 module Mandelbrot
 
-export BinaryExpansion,
-       Digit,
-       KneadingSequence, 
-       InternalAddress, 
-       address,
-       HubbardTree, 
-       AngledInternalAddress, 
-       OrientedHubbardTree,
-       leaf_vertices,
-       edge_vertices,
-       branch_vertices,
-       HyperbolicComponent,
-       parameter,
-       orbit,
-       characteristicset,
-       characteristicorbits,
-       ischaracteristic
+export address,
+    AngledInternalAddress,
+    OrientedHubbardTree,
+    leaf_vertices,
+    edge_vertices,
+    branch_vertices,
+    HyperbolicComponent,
+    parameter,
+    orbit,
+    characteristicset,
+    characteristicorbits,
+    ischaracteristic
 
 using IterTools,
-      Primes
+    Primes
 
 include("Sequences.jl")
-include("angledoubling.jl")
+export shift, prepend
+
+include("KneadingSequence.jl")
+export BinaryExpansion, KneadingSequence
+
+include("InternalAddress.jl")
+export InternalAddress
 
 include("Graphs.jl")
 include("HubbardTrees.jl")
+export HubbardTree
 
 include("orienttrees.jl")
 include("dynamicrays.jl")
