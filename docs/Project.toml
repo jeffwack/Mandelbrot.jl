@@ -8,4 +8,5 @@ Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
 Mandelbrot = "52854307-bbd1-4ac7-933f-adc0936abe8a"
 
 [sources]
-BrotViz = {url = "https://github.com/jeffwack/BrotViz.jl.git"}
+BrotViz = {path = "../../BrotViz"}
+Mandelbrot = {path = "/home/jeff/.julia/dev/Mandelbrot"}
