@@ -78,14 +78,14 @@ end
 
 #The vertical bars play the role of the overbar indicating the periodic part of a decimal expansion
 #Printing an overbar is possible but looked ugly, so I opted for these vertical bars instead.
-#They evoke musical repeat symbols.
+#They are intended to evoke musical repeat symbols.
 function Base.show(io::IO, K::Sequence)
-    str = join([string(item) for item in K.items])
+    str = [string(item) for item in K.items]
     L = K.preperiod
     if L == 0
-        return print(io, "|" * str * "|")
+        return print(io, "|", str..., "|")
     else
-        return print(io, str[1:L] * "|" * str[(L + 1):end] * "|")
+        return print(io, join(str[1:L], " "), "|", join(str[(L + 1):end], " "), "|")
     end
 end
 
