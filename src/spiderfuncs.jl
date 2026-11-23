@@ -1,48 +1,33 @@
+function signedarea(a, b, c)
+    return imag(conj(a - b) * (a - c))
+end
+
+function test_intersection(p, q, a, b)
+
+    ab_splits_pq = (signedarea(a, b, p) >= 0) != (signedarea(a, b, q) >= 0)
+    pq_splits_ab = (signedarea(p, q, a) >= 0) != (signedarea(p, q, b) >= 0)
+
+    return ab_splits_pq && pq_splits_ab
+end
+
+function intersection_number(path, segment)
+    num = 0
+    for pathseg in partition(path, 2, 1)
+        num += test_intersection(pathseg..., segment...)
+    end
+    return num
+end
 
 #This function starts at the 'shoulder' (path[1]) and works in towards the 'foot' (path[end])
 function path_sqrt(path::Vector{ComplexF64})
     branch = 1
     newpath = [sqrt(path[1])]
-    cut = (0.0 + 0.0im, -1000 + 0.0im)
-    for segment in partition(path,2,1)
-        if test_intersection(cut...,segment...)
+    cut = (0.0 + 0.0im, -1000 + 0.0im) #TODO this should be less arbitrary
+    for segment in partition(path, 2, 1)
+        if test_intersection(cut..., segment...)
             branch *= -1
         end
-        append!(newpath,branch*sqrt(segment[2]))
+        append!(newpath, branch * sqrt(segment[2]))
     end
     return newpath
-end
-
-function test_intersection(z1::Complex,z2::Complex,w1::Complex,w2::Complex)
-    
-    x1 = real(z1)
-    y1 = imag(z1)
-
-    x2 = real(z2)
-    y2 = imag(z2)
-
-    x3 = real(w1)
-    y3 = imag(w1)
-
-    x4 = real(w2)
-    y4 = imag(w2)
-
-    tn = (x1 - x3)*(y3 - y4) - (y1 - y3)*(x3 - x4)
-    un = (x1 - x3)*(y1 - y2) - (y1 - y3)*(x1 - x2)
-    d = (x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4)
-
-    if d == 0
-        return false
-    elseif sign(tn)*sign(d) == -1
-        return false
-    elseif sign(un)*sign(d) == -1
-        return false
-    elseif abs2(tn) > abs2(d)
-        return false
-    elseif abs2(un) > abs2(d)
-        return false
-    else
-        return true
-    end
-
 end
