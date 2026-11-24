@@ -10,13 +10,15 @@ export AngledInternalAddress,
     orbit,
     characteristicset,
     characteristicorbits,
-    ischaracteristic
+    ischaracteristic,
+    criticalanglesof,
+    allanglesof
 
 using IterTools,
     Primes
 
 include("Sequences.jl")
-export shift, prepend
+export Sequence, shift, prepend
 
 include("KneadingSequence.jl")
 export BinaryExpansion, KneadingSequence
