@@ -50,7 +50,6 @@ function spider_map(S::Spider; R = 1.0e6)
     newfeet = Vector{ComplexF64}(undef, n)
 
     branches = ones(Int, n)
-    branches[1] = 1
 
     #w_1
     newfeet[1] = 1
@@ -119,13 +118,13 @@ end
     parameter(theta::Rational, max_iter::Int)
 
 Computes the parameter (center) of a hyperbolic component using the spider algorithm 
-described in [hubbard_spider_1995](@cite).
+described in [Hubbard_Schleicher_1995](@cite).
 
 For a given external angle θ, this iteratively applies the spider map until convergence
 to find the parameter c at the center of the corresponding hyperbolic component.
 
 # References
-- [hubbard_spider_1995](@cite): The spider algorithm
+- [Hubbard_Schleicher_1995](@cite): The spider algorithm
 """
 function parameter(S::Spider, max_iter::Int; rtol::Real = 8 * eps())
     c_last = S.legs[2][1] / 2

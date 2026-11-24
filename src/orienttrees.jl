@@ -417,15 +417,3 @@ function allanglesof(theta::Rational)
     OH = OrientedHubbardTree(theta)
     return allanglesof(OH)
 end
-
-function angle_echo(theta::Rational)
-    aia = AngledInternalAddress(theta)
-    return criticalanglesof(aia)
-end
-
-function valid_binary(theta)
-    aia = AngledInternalAddress(theta)
-    K = kneadingsequence(theta)
-    H = orientedtree(aia)
-    return binary(theta) in criticalanglesof(H, K)
-end

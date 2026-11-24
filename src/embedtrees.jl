@@ -14,7 +14,7 @@ function EmbeddedHubbardTree(OHT::OrientedHubbardTree)
     criticalorbit = orbit(OHT.criticalpoint) #This is a sequence orbit
 
     theta = rationalangle(first(criticalanglesof(OHT)))
-    c = parameter(standardspider(theta), 250)
+    c = parameter(standardspider(theta), 1000)
 
     #critical orbit
     rays = Dict()
@@ -67,7 +67,7 @@ function EmbeddedHubbardTree(theta::Rational)
 end
 
 function Base.show(io::IO, H::EmbeddedHubbardTree)
-    return println(io, "Embedded Hubbard tree of " * repr(H.angle) * " with " * repr(length(keys(H.adj))) * " vertices")
+    return println(io, "Embedded Hubbard tree of " * repr(H.angle) * " with " * repr(length(H.vertices)) * " vertices")
 end
 
 function standardedges(adj, zero, zvalues)

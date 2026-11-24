@@ -21,8 +21,8 @@ fig
 ```
 
 ```@example rays
-HC = HyperbolicComponent(1//7)
-rays = collect(values(HC.rays))
+EHT = EmbeddedHubbardTree(1//7)
+rays = collect(values(EHT.rays))
 fig, ax = plotrays(rays)
 fig
 ```
