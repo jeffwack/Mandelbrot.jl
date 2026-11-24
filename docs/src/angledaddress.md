@@ -8,3 +8,10 @@ Internal addresses specify kneading sequences, but kneading sequences do not uni
 These are determined uniquely by the un-angled internal address
 ### Numerators of Angled Internal Addresses
 These can be chosen freely among the positive integers coprime to the denominator
+
+
+## Summary Table
+```@example testinternaladdress
+using CairoMakie, BrotViz, Mandelbrot
+kneadingtable([1//3, 1//7,7//9])
+```
