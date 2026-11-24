@@ -155,52 +155,6 @@ function refinetree!(EHT)
     return EHT
 end
 
-function plotedges!(scene,edgevectors)
-    for edge in edgevectors
-        line = edge[2][2]
-        lines!(scene,real.(line)/2,imag(line)/2,color = "black")
-    end
-    return scene
-end
-
-function plotedges(edgevectors)
-    scene = Scene(size=(1000,1000),aspect = 1)
-    return plotedges!(scene,edgevectors)
-end
-
-function embedanim(AIA::AngledInternalAddress,frames)
-    OHT = OrientedHubbardTree(AIA)
-    (E,c) = standardedges(OHT)
-
-    edgelist = [E]
-    for ii in 1:frames
-        E = refinetree(OHT,c,E)
-        push!(edgelist,E)
-    end
-
-    scene = Scene(size=(1000,1000),aspect = 1)
-    record(scene,"embedding.gif",1:frames,framerate = 3) do ii
-        empty!(scene)
-        plotedges!(scene,edgelist[ii])
-    end
-end
-
-function embedanim(angle::Rational,frames)
-    AIA = AngledInternalAddress(angle)
-    return embedanim(AIA,frames)
-end
-
-function showtree!(scene,angle::Rational)
-    E = refinedtree(angle,8)
-    return plotedges!(scene,E)
-end
-
-function showtree(angle::Rational)
-    scene = Scene(size=(500,500))
-    return showtree!(scene, angle)
-end
-    
-
 function angleclusters(H::OrientedHubbardTree)
     charset = characteristicset(H)
     allangles = allanglesof(H)
