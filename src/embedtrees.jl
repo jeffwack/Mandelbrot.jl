@@ -11,7 +11,7 @@ function EmbeddedHubbardTree(OHT::OrientedHubbardTree; refinements = 5)
 
     anglelist = allanglesof(OHT)
 
-    theta = rationalangle(first(criticalanglesof(OHT)))
+    theta = Rational(first(criticalanglesof(OHT)))
     c = parameter(standardspider(theta), 1000)
 
     #critical orbit

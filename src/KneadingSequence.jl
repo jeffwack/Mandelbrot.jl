@@ -187,7 +187,7 @@ function Base.isless(a::Sequence{Digit{N}}, b::Sequence{Digit{N}}) where {N}
 end
 
 
-function rationalangle(bits::BinaryExpansion)
+function Base.Rational(bits::BinaryExpansion)
     theta = 0 // 1
     k = bits.period
     r = 1 // (1 // 1 - (2 // 1)^-k)
