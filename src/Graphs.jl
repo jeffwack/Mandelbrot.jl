@@ -99,15 +99,15 @@ function neighbortowards(graph,base,target)
     end
 end
 
-function leaf_vertices(G::Graph)
+function leafvertices(G::Graph)
     return Set(v for v in keys(G.adj) if length(G.adj[v]) == 1)
 end
 
-function edge_vertices(G::Graph)
+function edgevertices(G::Graph)
     return Set(v for v in keys(G.adj) if length(G.adj[v]) == 2)
 end
 
-function branch_vertices(G::Graph)
+function branchvertices(G::Graph)
     return Set(v for v in keys(G.adj) if length(G.adj[v]) >= 3)
 end
 
