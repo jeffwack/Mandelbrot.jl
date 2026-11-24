@@ -7,11 +7,9 @@ struct EmbeddedHubbardTree
     edges::Dict{Set{Sequence{KneadingSymbol{3}}}, Tuple{Sequence{KneadingSymbol{3}}, Vector{ComplexF64}}}
 end
 
-function EmbeddedHubbardTree(OHT::OrientedHubbardTree)
+function EmbeddedHubbardTree(OHT::OrientedHubbardTree; refinements = 5)
 
     anglelist = allanglesof(OHT)
-
-    criticalorbit = orbit(OHT.criticalpoint) #This is a sequence orbit
 
     theta = rationalangle(first(criticalanglesof(OHT)))
     c = parameter(standardspider(theta), 1000)
@@ -39,7 +37,7 @@ function EmbeddedHubbardTree(OHT::OrientedHubbardTree)
     paramorbit = [0.0 + 0.0im]
     n = period(theta)
     #println(n)
-    for ii in 1:(n - 1)
+    for _ in 1:(n - 1)
         push!(paramorbit, paramorbit[end]^2 + c)
     end
     #println(paramorbit)
@@ -55,15 +53,15 @@ function EmbeddedHubbardTree(OHT::OrientedHubbardTree)
         end
     end
     E = standardedges(OHT.adj, OHT.criticalpoint, zvalues)
-    return EmbeddedHubbardTree(OHT, theta, rays, c, zvalues, E)
+    H = EmbeddedHubbardTree(OHT, theta, rays, c, zvalues, E)
+    for _ in 1:refinements
+        refinetree!(H)
+    end
+    return H
 end
 
-function EmbeddedHubbardTree(theta::Rational)
-    H0 = EmbeddedHubbardTree(OrientedHubbardTree(theta))
-    for ii in 1:5
-        refinetree!(H0)
-    end
-    return H0
+function EmbeddedHubbardTree(theta::Rational; refinements = 5)
+    return EmbeddedHubbardTree(OrientedHubbardTree(theta); refinements = refinements)
 end
 
 function Base.show(io::IO, H::EmbeddedHubbardTree)
@@ -87,8 +85,6 @@ function longpath(EHT, start, finish)
     edges = edgepath(EHT.htree, start, finish)
 
     edgevectors = EHT.edges
-
-    segments = [edgevectors[edge][2] for edge in edges]
 
     longpath = ComplexF64[]
 
@@ -117,18 +113,7 @@ function edgepath(graph, start, finish)
     return [Set(E) for E in partition(vertexpath, 2, 1)]
 end
 
-function refinedtree(OHT, zvalues, steps)
-    c = zvalues[shift(OHT.criticalpoint)]
-    E = standardedges(OHT, zvalues)
-    for ii in 1:steps
-        E = refinetree(OHT, c, E)
-    end
-    return E
-end
-
 function refinetree!(EHT)
-
-    newedges = []
     for edge in keys(EHT.edges)
         start = EHT.edges[edge][1]
         finish = first(filter(x -> x != start, edge))
