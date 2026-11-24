@@ -120,9 +120,13 @@ function AngledInternalAddress(theta)
 
     for ii in 1:(length(intadd) - 1)
         n = 0
-        for jj in 1:(denoms[ii] - 1)
-            if ((2 // 1)^((jj - 1) * intadd[ii]) * theta) <= theta
+        x = theta
+        for _ in 1:(denoms[ii] - 1)
+            if x <= theta
                 n += 1
+            end
+            for _ in 1:intadd[ii]
+                x = mod(2x, 1)
             end
         end
         push!(angles, n // denoms[ii])
@@ -157,11 +161,6 @@ function bifurcate(aia::AngledInternalAddress)
     intadd = append!(intadd, intadd[end] * 2 // 1)
     angles = append!(copy(aia.angles), 1 // 2)
     return AngledInternalAddress(intadd, angles)
-end
-
-
-function nextaddress(AIA::AngledInternalAddress)
-    #give the next valid internal address, going counterclockwise
 end
 
 #TreesBook pg 145
@@ -207,33 +206,18 @@ function newdenominator(AIA::AngledInternalAddress, new::Int)
 end
 
 
-function numembeddings(I::Vector{Int})
-    D = denominators(I)
+function numembeddings(IA::InternalAddress)
     n = 1
-    for d in D
+    for d in denominators(IA)
         n = n * totient(d) #The number of integers less than d and coprime
     end
     return n
 end
 
-function numembeddings(theta::Rational)
-    return numembeddings(internaladdress(theta))
-end
+numembeddings(addr::Vector{Int}) = numembeddings(InternalAddress(addr))
+
+numembeddings(theta::Rational) = numembeddings(InternalAddress(theta))
 
 function period(theta)
     return orbit(theta).period
-end
-
-function num_choices(D)
-    return prod([d - 1 for d in D])
-end
-
-function num_angles(K)
-    intadd = internaladdress(K)
-    D = denominators(intadd)
-    return num_choices(D)
-end
-
-function num_partners(theta)
-    return num_angles(kneadingsequence(theta))
 end
