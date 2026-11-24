@@ -8,8 +8,8 @@ using Test
     end
 
     @testset "Internal Addresses" begin
-        @test address(InternalAddress(KneadingSequence(1 // 3))) == [1, 2]
-        @test address(InternalAddress(KneadingSequence(1 // 7))) == [1, 3]
+        @test Vector(InternalAddress(KneadingSequence(1 // 3))) == [1, 2]
+        @test Vector(InternalAddress(KneadingSequence(1 // 7))) == [1, 3]
         @test length(leafvertices(HubbardTree(InternalAddress([1, 2])))) == 2
 
         H = HubbardTree(InternalAddress([1, 3]))

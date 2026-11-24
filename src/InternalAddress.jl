@@ -29,9 +29,7 @@ function KneadingSequence(intadd::InternalAddress)
     end
 end
 
-function address(IA::InternalAddress)
-    return IA.addr
-end
+Base.Vector(IA::InternalAddress) = copy(IA.addr)
 
 function Base.length(intadd::InternalAddress)
     return length(intadd.addr)

@@ -1,7 +1,6 @@
 module Mandelbrot
 
-export address,
-    AngledInternalAddress,
+export AngledInternalAddress,
     OrientedHubbardTree,
     leafvertices,
     edgevertices,
