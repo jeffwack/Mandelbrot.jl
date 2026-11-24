@@ -38,7 +38,7 @@ function stats(legs::Vector{Vector{ComplexF64}})
     return println(radius)
 end
 
-function spider_map(S::Spider; R = 1.0e6)
+function spidermap(S::Spider; R = 1.0e6)
     λ = S.legs[2][1] #the parameter of our polynomial map z -> λ(1+z/2)^2
 
     legs = [leg ./ λ for leg in S.legs]
@@ -108,7 +108,7 @@ function spideriterates(S0::Spider, n_iter::Int)
     list = [S0]
 
     for i in 1:n_iter
-        push!(list, spider_map(list[end]))
+        push!(list, spidermap(list[end]))
     end
     return list
 end
@@ -129,7 +129,7 @@ to find the parameter c at the center of the corresponding hyperbolic component.
 function parameter(S::Spider, max_iter::Int; rtol::Real = 8 * eps())
     c_last = S.legs[2][1] / 2
     for ii in 1:max_iter
-        S = spider_map(S)
+        S = spidermap(S)
         c = S.legs[2][1] / 2
         if abs(c - c_last) <= rtol * max(1, abs(c))
             return c
